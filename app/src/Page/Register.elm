@@ -106,19 +106,27 @@ registerWord word =
 
 view : Model -> Html Msg
 view model =
-    div
-        [ style "width" "100%"
-        , style "height" "100%"
-        , style "margin-top" "50px"
-        ]
-        [ h1
-            [ style "text-align" "center"
-            , style "font-size" "30px"
-            ]
-            [ text "New Word" ]
-        , viewRegisterForm model
-        , Form.viewSaveError model.registerError
-        ]
+    let
+        registerForm =
+            case model.registerError of
+                Just _ ->
+                    div [ style "text-align" "center" ] [ Form.viewSaveError model.registerError ]
+
+                Nothing ->
+                    div
+                        [ style "width" "100%"
+                        , style "height" "100%"
+                        , style "margin-top" "50px"
+                        ]
+                        [ h1
+                            [ style "text-align" "center"
+                            , style "font-size" "30px"
+                            ]
+                            [ text "New Word" ]
+                        , viewRegisterForm model
+                        ]
+    in
+    registerForm
 
 
 viewRegisterForm : Model -> Html Msg

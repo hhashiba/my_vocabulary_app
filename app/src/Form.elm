@@ -22,7 +22,7 @@ viewSaveError maybeError =
         Just error ->
             div []
                 [ h2 []
-                    [ text "Couldn't register a word at this time." ]
+                    [ text "Couldn't save a word at this time." ]
                 , text ("Error : " ++ error)
                 ]
 

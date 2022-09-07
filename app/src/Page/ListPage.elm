@@ -1,23 +1,24 @@
 module Page.ListPage exposing (Model, Msg, init, update, view)
 
-import Element exposing (Element, alignRight, centerX, centerY, column, el, explain, fill, height, htmlAttribute, layout, link, mouseOver, padding, paddingEach, paddingXY, px, rgb, rgba255, row, spacing, spacingXY, table, text, width)
+import Element exposing (Element, alignLeft, alignRight, centerX, centerY, column, el, explain, fill, height, layout, link, mouseOver, none, padding, paddingEach, paddingXY, px, rgba255, row, spacing, spacingXY, table, text, width)
 import Element.Background as Background
 import Element.Border as Border
 import Element.Events as Events
 import Element.Font as Font
-import Element.Input exposing (button)
-import Error exposing (buildErrorMessage, viewDeleteError, viewFetchError)
+import Element.Input as Input exposing (button, checkbox)
+import Error exposing (buildErrorMessage)
 import Html exposing (Html)
-import Html.Events exposing (onClick)
 import Http
 import Page.Top exposing (Msg)
 import RemoteData exposing (WebData)
-import Word exposing (Word, WordId, initialWord, stringFromId, wordsDecoder)
+import Word exposing (Word, initialWord, stringFromId, wordsDecoder)
 
 
 type alias Model =
     { words : WebData (List Word)
     , deleteError : Maybe String
+    , invisibleMeans : Bool
+    , invisibleWord : Bool
     }
 
 
@@ -25,6 +26,8 @@ type Msg
     = WordsReceived (WebData (List Word))
     | DeleteWord Word
     | WordDeleted (Result Http.Error String)
+    | InvisibleMeans Bool
+    | InvisibleWord Bool
 
 
 init : String -> ( Model, Cmd Msg )
@@ -36,6 +39,8 @@ initialModel : Model
 initialModel =
     { words = RemoteData.Loading
     , deleteError = Nothing
+    , invisibleMeans = False
+    , invisibleWord = False
     }
 
 
@@ -72,6 +77,16 @@ update msg model =
 
         WordDeleted (Err error) ->
             ( { model | deleteError = Just (buildErrorMessage error) }
+            , Cmd.none
+            )
+
+        InvisibleMeans _ ->
+            ( { model | invisibleMeans = not model.invisibleMeans }
+            , Cmd.none
+            )
+
+        InvisibleWord _ ->
+            ( { model | invisibleWord = not model.invisibleWord }
             , Cmd.none
             )
 
@@ -123,18 +138,25 @@ view model =
 
                 _ ->
                     text ""
+
+        wordList =
+            case model.deleteError of
+                Just _ ->
+                    viewDeleteError model.deleteError
+
+                Nothing ->
+                    column [ height fill, width fill, paddingXY 0 50, Font.semiBold ]
+                        [ column
+                            [ centerX
+                            , width (px 1000)
+                            , spacing 20
+                            ]
+                            [ newWordButton
+                            , viewWordList model
+                            ]
+                        ]
     in
-    layout [] <|
-        column [ height fill, width fill, paddingXY 0 50, Font.semiBold ]
-            [ column
-                [ centerX
-                , width (px 1000)
-                , spacing 20
-                ]
-                [ newWordButton
-                , viewWordList model
-                ]
-            ]
+    layout [] <| wordList
 
 
 
@@ -159,15 +181,37 @@ viewWordList model =
                 [ text "Loading.." ]
 
         RemoteData.Success words ->
-            viewTable words
+            viewTable words model.invisibleMeans model.invisibleWord
 
         RemoteData.Failure httpError ->
-            -- viewFetchError (buildErrorMessage httpError)
-            text "Error"
+            let
+                errorHeading =
+                    "Couldn't fetch posts at this time."
+            in
+            column
+                [ spacing 30
+                , Font.family
+                    [ Font.typeface "Hiragino Kaku Gothic ProN"
+                    , Font.sansSerif
+                    ]
+                , centerX
+                ]
+                [ el
+                    [ Font.bold
+                    , Font.size 24
+                    ]
+                    (text errorHeading)
+                , el
+                    [ Font.size 16
+                    , Font.regular
+                    , centerX
+                    ]
+                    (text ("Error : " ++ buildErrorMessage httpError))
+                ]
 
 
-viewTable : List Word -> Element Msg
-viewTable words =
+viewTable : List Word -> Bool -> Bool -> Element Msg
+viewTable words invisibleMeans invisibleWord =
     column
         [ height fill
         , width (px 1000)
@@ -181,13 +225,35 @@ viewTable words =
             { data = words
             , columns =
                 [ { header =
-                        row [ paddingXY 30 40 ]
-                            [ el
-                                [ centerX ]
-                                (text "Word")
+                        row [ paddingXY 30 40, spacing 10 ]
+                            [ column [ centerX ]
+                                [ text "Word" ]
+                            , column [ centerX ]
+                                [ checkbox []
+                                    { onChange = InvisibleWord
+                                    , icon = Input.defaultCheckbox
+                                    , checked = invisibleWord
+                                    , label = Input.labelRight [] <| text "invisible"
+                                    }
+                                ]
                             ]
                   , width = px 200
                   , view =
+                        let
+                            fontColor =
+                                if invisibleWord then
+                                    Font.color (rgba255 255 255 255 1)
+
+                                else
+                                    Font.color (rgba255 0 0 0 1)
+
+                            hoverColor =
+                                if invisibleWord then
+                                    mouseOver [ Font.color (rgba255 0 0 0 1) ]
+
+                                else
+                                    mouseOver [ Font.color (rgba255 0 0 0 1) ]
+                        in
                         \word ->
                             row
                                 [ padding 10
@@ -195,23 +261,50 @@ viewTable words =
                                 , centerX
                                 , Background.color (rgba255 255 255 255 1)
                                 , Border.rounded 5
+                                , fontColor
+                                , hoverColor
                                 ]
                                 [ text word.name ]
                   }
                 , { header =
-                        row [ paddingXY 30 40 ]
-                            [ el
-                                [ centerX ]
-                                (text "Means")
+                        row [ paddingXY 30 40, spacing 10 ]
+                            [ column [ centerX ]
+                                [ text "Means" ]
+                            , column [ centerX ]
+                                [ checkbox []
+                                    { onChange = InvisibleMeans
+                                    , icon = Input.defaultCheckbox
+                                    , checked = invisibleMeans
+                                    , label = Input.labelRight [] <| text "invisible"
+                                    }
+                                ]
                             ]
                   , width = px 300
                   , view =
+                        let
+                            fontColor =
+                                if invisibleMeans then
+                                    Font.color (rgba255 255 255 255 1)
+
+                                else
+                                    Font.color (rgba255 0 0 0 1)
+
+                            hoverColor =
+                                if invisibleMeans then
+                                    mouseOver [ Font.color (rgba255 0 0 0 1) ]
+
+                                else
+                                    mouseOver [ Font.color (rgba255 0 0 0 1) ]
+                        in
                         \word ->
                             row
-                                [ padding 10
+                                [ height (px 40)
+                                , paddingXY 10 0
                                 , centerY
                                 , Background.color (rgba255 255 255 255 1)
                                 , Border.rounded 5
+                                , fontColor
+                                , hoverColor
                                 ]
                                 [ text word.means ]
                   }
@@ -278,3 +371,37 @@ viewTable words =
                 ]
             }
         ]
+
+
+viewDeleteError : Maybe String -> Element Msg
+viewDeleteError deleteError =
+    let
+        errorHeading =
+            "Couldn't delete post at this time."
+    in
+    case deleteError of
+        Just error ->
+            column
+                [ spacing 30
+                , centerX
+                , Font.family
+                    [ Font.typeface "Hiragino Kaku Gothic ProN"
+                    , Font.sansSerif
+                    ]
+                , paddingXY 0 50
+                ]
+                [ el
+                    [ Font.bold
+                    , Font.size 24
+                    ]
+                    (text errorHeading)
+                , el
+                    [ Font.size 16
+                    , Font.regular
+                    , centerX
+                    ]
+                    (text ("Error : " ++ error))
+                ]
+
+        Nothing ->
+            text ""

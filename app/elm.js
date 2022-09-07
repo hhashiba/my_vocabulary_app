@@ -6299,7 +6299,7 @@ var $author$project$Page$ListPage$fetchWords = function (language) {
 			url: 'http://localhost:4242/' + language
 		});
 };
-var $author$project$Page$ListPage$initialModel = {deleteError: $elm$core$Maybe$Nothing, words: $krisajenkins$remotedata$RemoteData$Loading};
+var $author$project$Page$ListPage$initialModel = {deleteError: $elm$core$Maybe$Nothing, invisibleMeans: false, invisibleWord: false, words: $krisajenkins$remotedata$RemoteData$Loading};
 var $author$project$Page$ListPage$init = function (language) {
 	return _Utils_Tuple2(
 		$author$project$Page$ListPage$initialModel,
@@ -7118,6 +7118,7 @@ var $elm$core$List$head = function (list) {
 		return $elm$core$Maybe$Nothing;
 	}
 };
+var $elm$core$Basics$not = _Basics_not;
 var $elm$core$Maybe$withDefault = F2(
 	function (_default, maybe) {
 		if (maybe.$ === 'Just') {
@@ -7142,7 +7143,7 @@ var $author$project$Page$ListPage$update = F2(
 				return _Utils_Tuple2(
 					model,
 					$author$project$Page$ListPage$deleteWord(word));
-			default:
+			case 'WordDeleted':
 				if (msg.a.$ === 'Ok') {
 					var word = function () {
 						var _v1 = model.words;
@@ -7170,6 +7171,18 @@ var $author$project$Page$ListPage$update = F2(
 							}),
 						$elm$core$Platform$Cmd$none);
 				}
+			case 'InvisibleMeans':
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{invisibleMeans: !model.invisibleMeans}),
+					$elm$core$Platform$Cmd$none);
+			default:
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{invisibleWord: !model.invisibleWord}),
+					$elm$core$Platform$Cmd$none);
 		}
 	});
 var $author$project$Page$Register$WordRegistered = function (a) {
@@ -7365,7 +7378,7 @@ var $author$project$Form$viewSaveError = function (maybeError) {
 					_List_Nil,
 					_List_fromArray(
 						[
-							$elm$html$Html$text('Couldn\'t register a word at this time.')
+							$elm$html$Html$text('Couldn\'t save a word at this time.')
 						])),
 					$elm$html$Html$text('Error : ' + error)
 				]));
@@ -7653,7 +7666,10 @@ var $author$project$Error$viewFetchError = function (errorMessage) {
 	var errorHeading = 'Couldn\'t fetch posts at this time.';
 	return A2(
 		$elm$html$Html$div,
-		_List_Nil,
+		_List_fromArray(
+			[
+				A2($elm$html$Html$Attributes$style, 'text-align', 'center')
+			]),
 		_List_fromArray(
 			[
 				A2(
@@ -7696,38 +7712,54 @@ var $author$project$Page$Edit$viewWord = function (model) {
 	}
 };
 var $author$project$Page$Edit$view = function (model) {
-	var theme = function () {
-		var _v0 = model.word;
-		if (_v0.$ === 'Success') {
+	var label = function () {
+		var _v1 = model.word;
+		if (_v1.$ === 'Success') {
 			return 'Edit Word';
 		} else {
 			return '';
 		}
 	}();
-	return A2(
-		$elm$html$Html$div,
-		_List_fromArray(
-			[
-				A2($elm$html$Html$Attributes$style, 'width', '100%'),
-				A2($elm$html$Html$Attributes$style, 'height', '100%'),
-				A2($elm$html$Html$Attributes$style, 'margin-top', '50px')
-			]),
-		_List_fromArray(
-			[
-				A2(
-				$elm$html$Html$h1,
+	var editForm = function () {
+		var _v0 = model.saveError;
+		if (_v0.$ === 'Just') {
+			return A2(
+				$elm$html$Html$div,
 				_List_fromArray(
 					[
-						A2($elm$html$Html$Attributes$style, 'text-align', 'center'),
-						A2($elm$html$Html$Attributes$style, 'font-size', '30px')
+						A2($elm$html$Html$Attributes$style, 'text-align', 'center')
 					]),
 				_List_fromArray(
 					[
-						$elm$html$Html$text(theme)
-					])),
-				$author$project$Page$Edit$viewWord(model),
-				$author$project$Form$viewSaveError(model.saveError)
-			]));
+						$author$project$Form$viewSaveError(model.saveError)
+					]));
+		} else {
+			return A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						A2($elm$html$Html$Attributes$style, 'width', '100%'),
+						A2($elm$html$Html$Attributes$style, 'height', '100%'),
+						A2($elm$html$Html$Attributes$style, 'margin-top', '50px')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						$elm$html$Html$h1,
+						_List_fromArray(
+							[
+								A2($elm$html$Html$Attributes$style, 'text-align', 'center'),
+								A2($elm$html$Html$Attributes$style, 'font-size', '30px')
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$text(label)
+							])),
+						$author$project$Page$Edit$viewWord(model)
+					]));
+		}
+	}();
+	return editForm;
 };
 var $mdgriffith$elm_ui$Internal$Model$AlignX = function (a) {
 	return {$: 'AlignX', a: a};
@@ -11336,7 +11368,6 @@ var $elm$virtual_dom$VirtualDom$keyedNode = function (tag) {
 	return _VirtualDom_keyedNode(
 		_VirtualDom_noScript(tag));
 };
-var $elm$core$Basics$not = _Basics_not;
 var $elm$core$Bitwise$and = _Bitwise_and;
 var $mdgriffith$elm_ui$Internal$Flag$present = F2(
 	function (myFlag, _v0) {
@@ -13880,29 +13911,6 @@ var $mdgriffith$elm_ui$Element$text = function (content) {
 	return $mdgriffith$elm_ui$Internal$Model$Text(content);
 };
 var $mdgriffith$elm_ui$Element$Font$bold = A2($mdgriffith$elm_ui$Internal$Model$Class, $mdgriffith$elm_ui$Internal$Flag$fontWeight, $mdgriffith$elm_ui$Internal$Style$classes.bold);
-var $mdgriffith$elm_ui$Internal$Model$CenterY = {$: 'CenterY'};
-var $mdgriffith$elm_ui$Element$centerY = $mdgriffith$elm_ui$Internal$Model$AlignY($mdgriffith$elm_ui$Internal$Model$CenterY);
-var $mdgriffith$elm_ui$Element$Font$italic = $mdgriffith$elm_ui$Internal$Model$htmlClass($mdgriffith$elm_ui$Internal$Style$classes.italic);
-var $mdgriffith$elm_ui$Internal$Flag$letterSpacing = $mdgriffith$elm_ui$Internal$Flag$flag(16);
-var $mdgriffith$elm_ui$Element$Font$letterSpacing = function (offset) {
-	return A2(
-		$mdgriffith$elm_ui$Internal$Model$StyleClass,
-		$mdgriffith$elm_ui$Internal$Flag$letterSpacing,
-		A3(
-			$mdgriffith$elm_ui$Internal$Model$Single,
-			'ls-' + $mdgriffith$elm_ui$Internal$Model$floatClass(offset),
-			'letter-spacing',
-			$elm$core$String$fromFloat(offset) + 'px'));
-};
-var $mdgriffith$elm_ui$Element$Font$size = function (i) {
-	return A2(
-		$mdgriffith$elm_ui$Internal$Model$StyleClass,
-		$mdgriffith$elm_ui$Internal$Flag$fontSize,
-		$mdgriffith$elm_ui$Internal$Model$FontSize(i));
-};
-var $author$project$Page$ListPage$DeleteWord = function (a) {
-	return {$: 'DeleteWord', a: a};
-};
 var $mdgriffith$elm_ui$Element$el = F2(
 	function (attrs, child) {
 		return A4(
@@ -13920,6 +13928,449 @@ var $mdgriffith$elm_ui$Element$el = F2(
 				_List_fromArray(
 					[child])));
 	});
+var $mdgriffith$elm_ui$Element$Font$family = function (families) {
+	return A2(
+		$mdgriffith$elm_ui$Internal$Model$StyleClass,
+		$mdgriffith$elm_ui$Internal$Flag$fontFamily,
+		A2(
+			$mdgriffith$elm_ui$Internal$Model$FontFamily,
+			A3($elm$core$List$foldl, $mdgriffith$elm_ui$Internal$Model$renderFontClassName, 'ff-', families),
+			families));
+};
+var $mdgriffith$elm_ui$Element$Font$regular = A2($mdgriffith$elm_ui$Internal$Model$Class, $mdgriffith$elm_ui$Internal$Flag$fontWeight, $mdgriffith$elm_ui$Internal$Style$classes.textNormalWeight);
+var $mdgriffith$elm_ui$Element$Font$sansSerif = $mdgriffith$elm_ui$Internal$Model$SansSerif;
+var $mdgriffith$elm_ui$Element$Font$size = function (i) {
+	return A2(
+		$mdgriffith$elm_ui$Internal$Model$StyleClass,
+		$mdgriffith$elm_ui$Internal$Flag$fontSize,
+		$mdgriffith$elm_ui$Internal$Model$FontSize(i));
+};
+var $mdgriffith$elm_ui$Element$Font$typeface = $mdgriffith$elm_ui$Internal$Model$Typeface;
+var $author$project$Page$ListPage$viewDeleteError = function (deleteError) {
+	var errorHeading = 'Couldn\'t delete post at this time.';
+	if (deleteError.$ === 'Just') {
+		var error = deleteError.a;
+		return A2(
+			$mdgriffith$elm_ui$Element$column,
+			_List_fromArray(
+				[
+					$mdgriffith$elm_ui$Element$spacing(30),
+					$mdgriffith$elm_ui$Element$centerX,
+					$mdgriffith$elm_ui$Element$Font$family(
+					_List_fromArray(
+						[
+							$mdgriffith$elm_ui$Element$Font$typeface('Hiragino Kaku Gothic ProN'),
+							$mdgriffith$elm_ui$Element$Font$sansSerif
+						])),
+					A2($mdgriffith$elm_ui$Element$paddingXY, 0, 50)
+				]),
+			_List_fromArray(
+				[
+					A2(
+					$mdgriffith$elm_ui$Element$el,
+					_List_fromArray(
+						[
+							$mdgriffith$elm_ui$Element$Font$bold,
+							$mdgriffith$elm_ui$Element$Font$size(24)
+						]),
+					$mdgriffith$elm_ui$Element$text(errorHeading)),
+					A2(
+					$mdgriffith$elm_ui$Element$el,
+					_List_fromArray(
+						[
+							$mdgriffith$elm_ui$Element$Font$size(16),
+							$mdgriffith$elm_ui$Element$Font$regular,
+							$mdgriffith$elm_ui$Element$centerX
+						]),
+					$mdgriffith$elm_ui$Element$text('Error : ' + error))
+				]));
+	} else {
+		return $mdgriffith$elm_ui$Element$text('');
+	}
+};
+var $mdgriffith$elm_ui$Internal$Model$CenterY = {$: 'CenterY'};
+var $mdgriffith$elm_ui$Element$centerY = $mdgriffith$elm_ui$Internal$Model$AlignY($mdgriffith$elm_ui$Internal$Model$CenterY);
+var $mdgriffith$elm_ui$Element$Font$italic = $mdgriffith$elm_ui$Internal$Model$htmlClass($mdgriffith$elm_ui$Internal$Style$classes.italic);
+var $mdgriffith$elm_ui$Internal$Flag$letterSpacing = $mdgriffith$elm_ui$Internal$Flag$flag(16);
+var $mdgriffith$elm_ui$Element$Font$letterSpacing = function (offset) {
+	return A2(
+		$mdgriffith$elm_ui$Internal$Model$StyleClass,
+		$mdgriffith$elm_ui$Internal$Flag$letterSpacing,
+		A3(
+			$mdgriffith$elm_ui$Internal$Model$Single,
+			'ls-' + $mdgriffith$elm_ui$Internal$Model$floatClass(offset),
+			'letter-spacing',
+			$elm$core$String$fromFloat(offset) + 'px'));
+};
+var $author$project$Page$ListPage$DeleteWord = function (a) {
+	return {$: 'DeleteWord', a: a};
+};
+var $author$project$Page$ListPage$InvisibleMeans = function (a) {
+	return {$: 'InvisibleMeans', a: a};
+};
+var $author$project$Page$ListPage$InvisibleWord = function (a) {
+	return {$: 'InvisibleWord', a: a};
+};
+var $mdgriffith$elm_ui$Internal$Model$Left = {$: 'Left'};
+var $mdgriffith$elm_ui$Element$alignLeft = $mdgriffith$elm_ui$Internal$Model$AlignX($mdgriffith$elm_ui$Internal$Model$Left);
+var $mdgriffith$elm_ui$Internal$Model$LivePolite = {$: 'LivePolite'};
+var $mdgriffith$elm_ui$Element$Region$announce = $mdgriffith$elm_ui$Internal$Model$Describe($mdgriffith$elm_ui$Internal$Model$LivePolite);
+var $mdgriffith$elm_ui$Element$Input$applyLabel = F3(
+	function (attrs, label, input) {
+		if (label.$ === 'HiddenLabel') {
+			var labelText = label.a;
+			return A4(
+				$mdgriffith$elm_ui$Internal$Model$element,
+				$mdgriffith$elm_ui$Internal$Model$asColumn,
+				$mdgriffith$elm_ui$Internal$Model$NodeName('label'),
+				attrs,
+				$mdgriffith$elm_ui$Internal$Model$Unkeyed(
+					_List_fromArray(
+						[input])));
+		} else {
+			var position = label.a;
+			var labelAttrs = label.b;
+			var labelChild = label.c;
+			var labelElement = A4(
+				$mdgriffith$elm_ui$Internal$Model$element,
+				$mdgriffith$elm_ui$Internal$Model$asEl,
+				$mdgriffith$elm_ui$Internal$Model$div,
+				labelAttrs,
+				$mdgriffith$elm_ui$Internal$Model$Unkeyed(
+					_List_fromArray(
+						[labelChild])));
+			switch (position.$) {
+				case 'Above':
+					return A4(
+						$mdgriffith$elm_ui$Internal$Model$element,
+						$mdgriffith$elm_ui$Internal$Model$asColumn,
+						$mdgriffith$elm_ui$Internal$Model$NodeName('label'),
+						A2(
+							$elm$core$List$cons,
+							$mdgriffith$elm_ui$Internal$Model$htmlClass($mdgriffith$elm_ui$Internal$Style$classes.inputLabel),
+							attrs),
+						$mdgriffith$elm_ui$Internal$Model$Unkeyed(
+							_List_fromArray(
+								[labelElement, input])));
+				case 'Below':
+					return A4(
+						$mdgriffith$elm_ui$Internal$Model$element,
+						$mdgriffith$elm_ui$Internal$Model$asColumn,
+						$mdgriffith$elm_ui$Internal$Model$NodeName('label'),
+						A2(
+							$elm$core$List$cons,
+							$mdgriffith$elm_ui$Internal$Model$htmlClass($mdgriffith$elm_ui$Internal$Style$classes.inputLabel),
+							attrs),
+						$mdgriffith$elm_ui$Internal$Model$Unkeyed(
+							_List_fromArray(
+								[input, labelElement])));
+				case 'OnRight':
+					return A4(
+						$mdgriffith$elm_ui$Internal$Model$element,
+						$mdgriffith$elm_ui$Internal$Model$asRow,
+						$mdgriffith$elm_ui$Internal$Model$NodeName('label'),
+						A2(
+							$elm$core$List$cons,
+							$mdgriffith$elm_ui$Internal$Model$htmlClass($mdgriffith$elm_ui$Internal$Style$classes.inputLabel),
+							attrs),
+						$mdgriffith$elm_ui$Internal$Model$Unkeyed(
+							_List_fromArray(
+								[input, labelElement])));
+				default:
+					return A4(
+						$mdgriffith$elm_ui$Internal$Model$element,
+						$mdgriffith$elm_ui$Internal$Model$asRow,
+						$mdgriffith$elm_ui$Internal$Model$NodeName('label'),
+						A2(
+							$elm$core$List$cons,
+							$mdgriffith$elm_ui$Internal$Model$htmlClass($mdgriffith$elm_ui$Internal$Style$classes.inputLabel),
+							attrs),
+						$mdgriffith$elm_ui$Internal$Model$Unkeyed(
+							_List_fromArray(
+								[labelElement, input])));
+			}
+		}
+	});
+var $elm$html$Html$Attributes$attribute = $elm$virtual_dom$VirtualDom$attribute;
+var $mdgriffith$elm_ui$Internal$Model$Label = function (a) {
+	return {$: 'Label', a: a};
+};
+var $mdgriffith$elm_ui$Element$Input$hiddenLabelAttribute = function (label) {
+	if (label.$ === 'HiddenLabel') {
+		var textLabel = label.a;
+		return $mdgriffith$elm_ui$Internal$Model$Describe(
+			$mdgriffith$elm_ui$Internal$Model$Label(textLabel));
+	} else {
+		return $mdgriffith$elm_ui$Internal$Model$NoAttribute;
+	}
+};
+var $mdgriffith$elm_ui$Element$Input$isHiddenLabel = function (label) {
+	if (label.$ === 'HiddenLabel') {
+		return true;
+	} else {
+		return false;
+	}
+};
+var $mdgriffith$elm_ui$Element$Input$tabindex = A2($elm$core$Basics$composeL, $mdgriffith$elm_ui$Internal$Model$Attr, $elm$html$Html$Attributes$tabindex);
+var $mdgriffith$elm_ui$Element$Input$checkbox = F2(
+	function (attrs, _v0) {
+		var label = _v0.label;
+		var icon = _v0.icon;
+		var checked = _v0.checked;
+		var onChange = _v0.onChange;
+		var attributes = _Utils_ap(
+			_List_fromArray(
+				[
+					$mdgriffith$elm_ui$Element$Input$isHiddenLabel(label) ? $mdgriffith$elm_ui$Internal$Model$NoAttribute : $mdgriffith$elm_ui$Element$spacing(6),
+					$mdgriffith$elm_ui$Internal$Model$Attr(
+					$elm$html$Html$Events$onClick(
+						onChange(!checked))),
+					$mdgriffith$elm_ui$Element$Region$announce,
+					$mdgriffith$elm_ui$Element$Input$onKeyLookup(
+					function (code) {
+						return _Utils_eq(code, $mdgriffith$elm_ui$Element$Input$enter) ? $elm$core$Maybe$Just(
+							onChange(!checked)) : (_Utils_eq(code, $mdgriffith$elm_ui$Element$Input$space) ? $elm$core$Maybe$Just(
+							onChange(!checked)) : $elm$core$Maybe$Nothing);
+					}),
+					$mdgriffith$elm_ui$Element$Input$tabindex(0),
+					$mdgriffith$elm_ui$Element$pointer,
+					$mdgriffith$elm_ui$Element$alignLeft,
+					$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
+				]),
+			attrs);
+		return A3(
+			$mdgriffith$elm_ui$Element$Input$applyLabel,
+			A2(
+				$elm$core$List$cons,
+				$mdgriffith$elm_ui$Internal$Model$Attr(
+					A2($elm$html$Html$Attributes$attribute, 'role', 'checkbox')),
+				A2(
+					$elm$core$List$cons,
+					$mdgriffith$elm_ui$Internal$Model$Attr(
+						A2(
+							$elm$html$Html$Attributes$attribute,
+							'aria-checked',
+							checked ? 'true' : 'false')),
+					A2(
+						$elm$core$List$cons,
+						$mdgriffith$elm_ui$Element$Input$hiddenLabelAttribute(label),
+						attributes))),
+			label,
+			A4(
+				$mdgriffith$elm_ui$Internal$Model$element,
+				$mdgriffith$elm_ui$Internal$Model$asEl,
+				$mdgriffith$elm_ui$Internal$Model$div,
+				_List_fromArray(
+					[
+						$mdgriffith$elm_ui$Element$centerY,
+						$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
+						$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$shrink)
+					]),
+				$mdgriffith$elm_ui$Internal$Model$Unkeyed(
+					_List_fromArray(
+						[
+							icon(checked)
+						]))));
+	});
+var $mdgriffith$elm_ui$Element$Font$color = function (fontColor) {
+	return A2(
+		$mdgriffith$elm_ui$Internal$Model$StyleClass,
+		$mdgriffith$elm_ui$Internal$Flag$fontColor,
+		A3(
+			$mdgriffith$elm_ui$Internal$Model$Colored,
+			'fc-' + $mdgriffith$elm_ui$Internal$Model$formatColorClass(fontColor),
+			'color',
+			fontColor));
+};
+var $mdgriffith$elm_ui$Internal$Flag$fontAlignment = $mdgriffith$elm_ui$Internal$Flag$flag(12);
+var $mdgriffith$elm_ui$Element$Font$center = A2($mdgriffith$elm_ui$Internal$Model$Class, $mdgriffith$elm_ui$Internal$Flag$fontAlignment, $mdgriffith$elm_ui$Internal$Style$classes.textCenter);
+var $elm$core$Basics$pi = _Basics_pi;
+var $elm$core$Basics$degrees = function (angleInDegrees) {
+	return (angleInDegrees * $elm$core$Basics$pi) / 180;
+};
+var $mdgriffith$elm_ui$Internal$Model$InFront = {$: 'InFront'};
+var $mdgriffith$elm_ui$Element$createNearby = F2(
+	function (loc, element) {
+		if (element.$ === 'Empty') {
+			return $mdgriffith$elm_ui$Internal$Model$NoAttribute;
+		} else {
+			return A2($mdgriffith$elm_ui$Internal$Model$Nearby, loc, element);
+		}
+	});
+var $mdgriffith$elm_ui$Element$inFront = function (element) {
+	return A2($mdgriffith$elm_ui$Element$createNearby, $mdgriffith$elm_ui$Internal$Model$InFront, element);
+};
+var $mdgriffith$elm_ui$Internal$Model$MoveY = function (a) {
+	return {$: 'MoveY', a: a};
+};
+var $mdgriffith$elm_ui$Internal$Flag$moveY = $mdgriffith$elm_ui$Internal$Flag$flag(26);
+var $mdgriffith$elm_ui$Element$moveUp = function (y) {
+	return A2(
+		$mdgriffith$elm_ui$Internal$Model$TransformComponent,
+		$mdgriffith$elm_ui$Internal$Flag$moveY,
+		$mdgriffith$elm_ui$Internal$Model$MoveY(-y));
+};
+var $mdgriffith$elm_ui$Element$none = $mdgriffith$elm_ui$Internal$Model$Empty;
+var $mdgriffith$elm_ui$Element$rgb = F3(
+	function (r, g, b) {
+		return A4($mdgriffith$elm_ui$Internal$Model$Rgba, r, g, b, 1);
+	});
+var $mdgriffith$elm_ui$Element$rgba = $mdgriffith$elm_ui$Internal$Model$Rgba;
+var $mdgriffith$elm_ui$Internal$Model$Rotate = F2(
+	function (a, b) {
+		return {$: 'Rotate', a: a, b: b};
+	});
+var $mdgriffith$elm_ui$Internal$Flag$rotate = $mdgriffith$elm_ui$Internal$Flag$flag(24);
+var $mdgriffith$elm_ui$Element$rotate = function (angle) {
+	return A2(
+		$mdgriffith$elm_ui$Internal$Model$TransformComponent,
+		$mdgriffith$elm_ui$Internal$Flag$rotate,
+		A2(
+			$mdgriffith$elm_ui$Internal$Model$Rotate,
+			_Utils_Tuple3(0, 0, 1),
+			angle));
+};
+var $mdgriffith$elm_ui$Internal$Model$boxShadowClass = function (shadow) {
+	return $elm$core$String$concat(
+		_List_fromArray(
+			[
+				shadow.inset ? 'box-inset' : 'box-',
+				$mdgriffith$elm_ui$Internal$Model$floatClass(shadow.offset.a) + 'px',
+				$mdgriffith$elm_ui$Internal$Model$floatClass(shadow.offset.b) + 'px',
+				$mdgriffith$elm_ui$Internal$Model$floatClass(shadow.blur) + 'px',
+				$mdgriffith$elm_ui$Internal$Model$floatClass(shadow.size) + 'px',
+				$mdgriffith$elm_ui$Internal$Model$formatColorClass(shadow.color)
+			]));
+};
+var $mdgriffith$elm_ui$Internal$Flag$shadows = $mdgriffith$elm_ui$Internal$Flag$flag(19);
+var $mdgriffith$elm_ui$Element$Border$shadow = function (almostShade) {
+	var shade = {blur: almostShade.blur, color: almostShade.color, inset: false, offset: almostShade.offset, size: almostShade.size};
+	return A2(
+		$mdgriffith$elm_ui$Internal$Model$StyleClass,
+		$mdgriffith$elm_ui$Internal$Flag$shadows,
+		A3(
+			$mdgriffith$elm_ui$Internal$Model$Single,
+			$mdgriffith$elm_ui$Internal$Model$boxShadowClass(shade),
+			'box-shadow',
+			$mdgriffith$elm_ui$Internal$Model$formatBoxShadow(shade)));
+};
+var $mdgriffith$elm_ui$Internal$Model$Transparency = F2(
+	function (a, b) {
+		return {$: 'Transparency', a: a, b: b};
+	});
+var $mdgriffith$elm_ui$Internal$Flag$transparency = $mdgriffith$elm_ui$Internal$Flag$flag(0);
+var $mdgriffith$elm_ui$Element$transparent = function (on) {
+	return on ? A2(
+		$mdgriffith$elm_ui$Internal$Model$StyleClass,
+		$mdgriffith$elm_ui$Internal$Flag$transparency,
+		A2($mdgriffith$elm_ui$Internal$Model$Transparency, 'transparent', 1.0)) : A2(
+		$mdgriffith$elm_ui$Internal$Model$StyleClass,
+		$mdgriffith$elm_ui$Internal$Flag$transparency,
+		A2($mdgriffith$elm_ui$Internal$Model$Transparency, 'visible', 0.0));
+};
+var $mdgriffith$elm_ui$Element$Input$white = A3($mdgriffith$elm_ui$Element$rgb, 1, 1, 1);
+var $mdgriffith$elm_ui$Internal$Model$BorderWidth = F5(
+	function (a, b, c, d, e) {
+		return {$: 'BorderWidth', a: a, b: b, c: c, d: d, e: e};
+	});
+var $mdgriffith$elm_ui$Element$Border$width = function (v) {
+	return A2(
+		$mdgriffith$elm_ui$Internal$Model$StyleClass,
+		$mdgriffith$elm_ui$Internal$Flag$borderWidth,
+		A5(
+			$mdgriffith$elm_ui$Internal$Model$BorderWidth,
+			'b-' + $elm$core$String$fromInt(v),
+			v,
+			v,
+			v,
+			v));
+};
+var $mdgriffith$elm_ui$Element$Border$widthXY = F2(
+	function (x, y) {
+		return A2(
+			$mdgriffith$elm_ui$Internal$Model$StyleClass,
+			$mdgriffith$elm_ui$Internal$Flag$borderWidth,
+			A5(
+				$mdgriffith$elm_ui$Internal$Model$BorderWidth,
+				'b-' + ($elm$core$String$fromInt(x) + ('-' + $elm$core$String$fromInt(y))),
+				y,
+				x,
+				y,
+				x));
+	});
+var $mdgriffith$elm_ui$Element$Border$widthEach = function (_v0) {
+	var bottom = _v0.bottom;
+	var top = _v0.top;
+	var left = _v0.left;
+	var right = _v0.right;
+	return (_Utils_eq(top, bottom) && _Utils_eq(left, right)) ? (_Utils_eq(top, right) ? $mdgriffith$elm_ui$Element$Border$width(top) : A2($mdgriffith$elm_ui$Element$Border$widthXY, left, top)) : A2(
+		$mdgriffith$elm_ui$Internal$Model$StyleClass,
+		$mdgriffith$elm_ui$Internal$Flag$borderWidth,
+		A5(
+			$mdgriffith$elm_ui$Internal$Model$BorderWidth,
+			'b-' + ($elm$core$String$fromInt(top) + ('-' + ($elm$core$String$fromInt(right) + ('-' + ($elm$core$String$fromInt(bottom) + ('-' + $elm$core$String$fromInt(left))))))),
+			top,
+			right,
+			bottom,
+			left));
+};
+var $mdgriffith$elm_ui$Element$Input$defaultCheckbox = function (checked) {
+	return A2(
+		$mdgriffith$elm_ui$Element$el,
+		_List_fromArray(
+			[
+				$mdgriffith$elm_ui$Internal$Model$htmlClass('focusable'),
+				$mdgriffith$elm_ui$Element$width(
+				$mdgriffith$elm_ui$Element$px(14)),
+				$mdgriffith$elm_ui$Element$height(
+				$mdgriffith$elm_ui$Element$px(14)),
+				$mdgriffith$elm_ui$Element$Font$color($mdgriffith$elm_ui$Element$Input$white),
+				$mdgriffith$elm_ui$Element$centerY,
+				$mdgriffith$elm_ui$Element$Font$size(9),
+				$mdgriffith$elm_ui$Element$Font$center,
+				$mdgriffith$elm_ui$Element$Border$rounded(3),
+				$mdgriffith$elm_ui$Element$Border$color(
+				checked ? A3($mdgriffith$elm_ui$Element$rgb, 59 / 255, 153 / 255, 252 / 255) : A3($mdgriffith$elm_ui$Element$rgb, 211 / 255, 211 / 255, 211 / 255)),
+				$mdgriffith$elm_ui$Element$Border$shadow(
+				{
+					blur: 1,
+					color: checked ? A4($mdgriffith$elm_ui$Element$rgba, 238 / 255, 238 / 255, 238 / 255, 0) : A3($mdgriffith$elm_ui$Element$rgb, 238 / 255, 238 / 255, 238 / 255),
+					offset: _Utils_Tuple2(0, 0),
+					size: 1
+				}),
+				$mdgriffith$elm_ui$Element$Background$color(
+				checked ? A3($mdgriffith$elm_ui$Element$rgb, 59 / 255, 153 / 255, 252 / 255) : $mdgriffith$elm_ui$Element$Input$white),
+				$mdgriffith$elm_ui$Element$Border$width(
+				checked ? 0 : 1),
+				$mdgriffith$elm_ui$Element$inFront(
+				A2(
+					$mdgriffith$elm_ui$Element$el,
+					_List_fromArray(
+						[
+							$mdgriffith$elm_ui$Element$Border$color($mdgriffith$elm_ui$Element$Input$white),
+							$mdgriffith$elm_ui$Element$height(
+							$mdgriffith$elm_ui$Element$px(6)),
+							$mdgriffith$elm_ui$Element$width(
+							$mdgriffith$elm_ui$Element$px(9)),
+							$mdgriffith$elm_ui$Element$rotate(
+							$elm$core$Basics$degrees(-45)),
+							$mdgriffith$elm_ui$Element$centerX,
+							$mdgriffith$elm_ui$Element$centerY,
+							$mdgriffith$elm_ui$Element$moveUp(1),
+							$mdgriffith$elm_ui$Element$transparent(!checked),
+							$mdgriffith$elm_ui$Element$Border$widthEach(
+							{bottom: 2, left: 2, right: 0, top: 0})
+						]),
+					$mdgriffith$elm_ui$Element$none))
+			]),
+		$mdgriffith$elm_ui$Element$none);
+};
+var $mdgriffith$elm_ui$Element$Input$Label = F3(
+	function (a, b, c) {
+		return {$: 'Label', a: a, b: b, c: c};
+	});
+var $mdgriffith$elm_ui$Element$Input$OnRight = {$: 'OnRight'};
+var $mdgriffith$elm_ui$Element$Input$labelRight = $mdgriffith$elm_ui$Element$Input$Label($mdgriffith$elm_ui$Element$Input$OnRight);
 var $mdgriffith$elm_ui$Internal$Model$paddingName = F4(
 	function (top, right, bottom, left) {
 		return 'pad-' + ($elm$core$String$fromInt(top) + ('-' + ($elm$core$String$fromInt(right) + ('-' + ($elm$core$String$fromInt(bottom) + ('-' + $elm$core$String$fromInt(left)))))));
@@ -14178,244 +14629,313 @@ var $mdgriffith$elm_ui$Element$table = F2(
 				data: config.data
 			});
 	});
-var $mdgriffith$elm_ui$Internal$Model$BorderWidth = F5(
-	function (a, b, c, d, e) {
-		return {$: 'BorderWidth', a: a, b: b, c: c, d: d, e: e};
-	});
-var $mdgriffith$elm_ui$Element$Border$width = function (v) {
-	return A2(
-		$mdgriffith$elm_ui$Internal$Model$StyleClass,
-		$mdgriffith$elm_ui$Internal$Flag$borderWidth,
-		A5(
-			$mdgriffith$elm_ui$Internal$Model$BorderWidth,
-			'b-' + $elm$core$String$fromInt(v),
-			v,
-			v,
-			v,
-			v));
-};
-var $author$project$Page$ListPage$viewTable = function (words) {
-	return A2(
-		$mdgriffith$elm_ui$Element$column,
-		_List_fromArray(
-			[
-				$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
-				$mdgriffith$elm_ui$Element$width(
-				$mdgriffith$elm_ui$Element$px(1000)),
-				$mdgriffith$elm_ui$Element$centerX,
-				$mdgriffith$elm_ui$Element$centerY,
-				$mdgriffith$elm_ui$Element$Background$color(
-				A4($mdgriffith$elm_ui$Element$rgba255, 200, 200, 200, 0.8)),
-				$mdgriffith$elm_ui$Element$paddingEach(
-				{bottom: 70, left: 60, right: 60, top: 20}),
-				$mdgriffith$elm_ui$Element$Border$rounded(10)
-			]),
-		_List_fromArray(
-			[
-				A2(
-				$mdgriffith$elm_ui$Element$table,
-				_List_fromArray(
-					[
-						$mdgriffith$elm_ui$Element$centerX,
-						$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
-						$mdgriffith$elm_ui$Element$spacing(10)
-					]),
-				{
-					columns: _List_fromArray(
+var $author$project$Page$ListPage$viewTable = F3(
+	function (words, invisibleMeans, invisibleWord) {
+		return A2(
+			$mdgriffith$elm_ui$Element$column,
+			_List_fromArray(
+				[
+					$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
+					$mdgriffith$elm_ui$Element$width(
+					$mdgriffith$elm_ui$Element$px(1000)),
+					$mdgriffith$elm_ui$Element$centerX,
+					$mdgriffith$elm_ui$Element$centerY,
+					$mdgriffith$elm_ui$Element$Background$color(
+					A4($mdgriffith$elm_ui$Element$rgba255, 200, 200, 200, 0.8)),
+					$mdgriffith$elm_ui$Element$paddingEach(
+					{bottom: 70, left: 60, right: 60, top: 20}),
+					$mdgriffith$elm_ui$Element$Border$rounded(10)
+				]),
+			_List_fromArray(
+				[
+					A2(
+					$mdgriffith$elm_ui$Element$table,
+					_List_fromArray(
 						[
-							{
-							header: A2(
-								$mdgriffith$elm_ui$Element$row,
-								_List_fromArray(
-									[
-										A2($mdgriffith$elm_ui$Element$paddingXY, 30, 40)
-									]),
-								_List_fromArray(
-									[
-										A2(
-										$mdgriffith$elm_ui$Element$el,
-										_List_fromArray(
-											[$mdgriffith$elm_ui$Element$centerX]),
-										$mdgriffith$elm_ui$Element$text('Word'))
-									])),
-							view: function (word) {
-								return A2(
-									$mdgriffith$elm_ui$Element$row,
-									_List_fromArray(
-										[
-											$mdgriffith$elm_ui$Element$padding(10),
-											$mdgriffith$elm_ui$Element$centerY,
-											$mdgriffith$elm_ui$Element$centerX,
-											$mdgriffith$elm_ui$Element$Background$color(
-											A4($mdgriffith$elm_ui$Element$rgba255, 255, 255, 255, 1)),
-											$mdgriffith$elm_ui$Element$Border$rounded(5)
-										]),
-									_List_fromArray(
-										[
-											$mdgriffith$elm_ui$Element$text(word.name)
-										]));
-							},
-							width: $mdgriffith$elm_ui$Element$px(200)
-						},
-							{
-							header: A2(
-								$mdgriffith$elm_ui$Element$row,
-								_List_fromArray(
-									[
-										A2($mdgriffith$elm_ui$Element$paddingXY, 30, 40)
-									]),
-								_List_fromArray(
-									[
-										A2(
-										$mdgriffith$elm_ui$Element$el,
-										_List_fromArray(
-											[$mdgriffith$elm_ui$Element$centerX]),
-										$mdgriffith$elm_ui$Element$text('Means'))
-									])),
-							view: function (word) {
-								return A2(
-									$mdgriffith$elm_ui$Element$row,
-									_List_fromArray(
-										[
-											$mdgriffith$elm_ui$Element$padding(10),
-											$mdgriffith$elm_ui$Element$centerY,
-											$mdgriffith$elm_ui$Element$Background$color(
-											A4($mdgriffith$elm_ui$Element$rgba255, 255, 255, 255, 1)),
-											$mdgriffith$elm_ui$Element$Border$rounded(5)
-										]),
-									_List_fromArray(
-										[
-											$mdgriffith$elm_ui$Element$text(word.means)
-										]));
-							},
-							width: $mdgriffith$elm_ui$Element$px(300)
-						},
-							{
-							header: A2(
-								$mdgriffith$elm_ui$Element$row,
-								_List_fromArray(
-									[
-										A2($mdgriffith$elm_ui$Element$paddingXY, 30, 40)
-									]),
-								_List_fromArray(
-									[
-										A2(
-										$mdgriffith$elm_ui$Element$el,
-										_List_fromArray(
-											[$mdgriffith$elm_ui$Element$centerX]),
-										$mdgriffith$elm_ui$Element$text('Edit'))
-									])),
-							view: function (word) {
-								return A2(
-									$mdgriffith$elm_ui$Element$row,
-									_List_Nil,
-									_List_fromArray(
-										[
-											A2(
-											$mdgriffith$elm_ui$Element$Input$button,
-											_List_fromArray(
-												[
-													$mdgriffith$elm_ui$Element$width(
-													$mdgriffith$elm_ui$Element$px(40)),
-													$mdgriffith$elm_ui$Element$height(
-													$mdgriffith$elm_ui$Element$px(40)),
-													$mdgriffith$elm_ui$Element$centerX,
-													$mdgriffith$elm_ui$Element$centerY,
-													$mdgriffith$elm_ui$Element$Background$color(
-													A4($mdgriffith$elm_ui$Element$rgba255, 85, 250, 91, 1)),
-													$mdgriffith$elm_ui$Element$Border$rounded(50),
-													$mdgriffith$elm_ui$Element$Border$solid,
-													$mdgriffith$elm_ui$Element$Border$color(
-													A4($mdgriffith$elm_ui$Element$rgba255, 0, 0, 0, 0.2)),
-													$mdgriffith$elm_ui$Element$Border$width(1),
-													$mdgriffith$elm_ui$Element$mouseOver(
-													_List_fromArray(
-														[
-															$mdgriffith$elm_ui$Element$Background$color(
-															A4($mdgriffith$elm_ui$Element$rgba255, 70, 200, 80, 1))
-														]))
-												]),
-											{
-												label: A2(
-													$mdgriffith$elm_ui$Element$link,
-													_List_fromArray(
-														[$mdgriffith$elm_ui$Element$centerX]),
-													{
-														label: $mdgriffith$elm_ui$Element$text('E'),
-														url: '/' + (word.language + ('/' + $author$project$Word$stringFromId(word.id)))
-													}),
-												onPress: $elm$core$Maybe$Nothing
-											})
-										]));
-							},
-							width: $mdgriffith$elm_ui$Element$fill
-						},
-							{
-							header: A2(
-								$mdgriffith$elm_ui$Element$row,
-								_List_fromArray(
-									[
-										A2($mdgriffith$elm_ui$Element$paddingXY, 30, 40)
-									]),
-								_List_fromArray(
-									[
-										A2(
-										$mdgriffith$elm_ui$Element$el,
-										_List_fromArray(
-											[$mdgriffith$elm_ui$Element$centerX]),
-										$mdgriffith$elm_ui$Element$text('Delete'))
-									])),
-							view: function (word) {
-								return A2(
-									$mdgriffith$elm_ui$Element$row,
-									_List_Nil,
-									_List_fromArray(
-										[
-											A2(
-											$mdgriffith$elm_ui$Element$Input$button,
-											_List_fromArray(
-												[
-													$mdgriffith$elm_ui$Element$width(
-													$mdgriffith$elm_ui$Element$px(40)),
-													$mdgriffith$elm_ui$Element$height(
-													$mdgriffith$elm_ui$Element$px(40)),
-													$mdgriffith$elm_ui$Element$centerX,
-													$mdgriffith$elm_ui$Element$centerY,
-													$mdgriffith$elm_ui$Element$Background$color(
-													A4($mdgriffith$elm_ui$Element$rgba255, 255, 90, 80, 1)),
-													$mdgriffith$elm_ui$Element$Border$rounded(50),
-													$mdgriffith$elm_ui$Element$Border$solid,
-													$mdgriffith$elm_ui$Element$Border$color(
-													A4($mdgriffith$elm_ui$Element$rgba255, 0, 0, 0, 0.2)),
-													$mdgriffith$elm_ui$Element$Border$width(1),
-													$mdgriffith$elm_ui$Element$mouseOver(
-													_List_fromArray(
-														[
-															$mdgriffith$elm_ui$Element$Background$color(
-															A4($mdgriffith$elm_ui$Element$rgba255, 255, 40, 40, 1))
-														]))
-												]),
-											{
-												label: A2(
-													$mdgriffith$elm_ui$Element$row,
-													_List_fromArray(
-														[$mdgriffith$elm_ui$Element$centerX]),
-													_List_fromArray(
-														[
-															$mdgriffith$elm_ui$Element$text('D')
-														])),
-												onPress: $elm$core$Maybe$Just(
-													$author$project$Page$ListPage$DeleteWord(word))
-											})
-										]));
-							},
-							width: $mdgriffith$elm_ui$Element$fill
-						}
+							$mdgriffith$elm_ui$Element$centerX,
+							$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
+							$mdgriffith$elm_ui$Element$spacing(10)
 						]),
-					data: words
-				})
-			]));
-};
+					{
+						columns: _List_fromArray(
+							[
+								{
+								header: A2(
+									$mdgriffith$elm_ui$Element$row,
+									_List_fromArray(
+										[
+											A2($mdgriffith$elm_ui$Element$paddingXY, 30, 40),
+											$mdgriffith$elm_ui$Element$spacing(10)
+										]),
+									_List_fromArray(
+										[
+											A2(
+											$mdgriffith$elm_ui$Element$column,
+											_List_fromArray(
+												[$mdgriffith$elm_ui$Element$centerX]),
+											_List_fromArray(
+												[
+													$mdgriffith$elm_ui$Element$text('Word')
+												])),
+											A2(
+											$mdgriffith$elm_ui$Element$column,
+											_List_fromArray(
+												[$mdgriffith$elm_ui$Element$centerX]),
+											_List_fromArray(
+												[
+													A2(
+													$mdgriffith$elm_ui$Element$Input$checkbox,
+													_List_Nil,
+													{
+														checked: invisibleWord,
+														icon: $mdgriffith$elm_ui$Element$Input$defaultCheckbox,
+														label: A2(
+															$mdgriffith$elm_ui$Element$Input$labelRight,
+															_List_Nil,
+															$mdgriffith$elm_ui$Element$text('invisible')),
+														onChange: $author$project$Page$ListPage$InvisibleWord
+													})
+												]))
+										])),
+								view: function () {
+									var hoverColor = invisibleWord ? $mdgriffith$elm_ui$Element$mouseOver(
+										_List_fromArray(
+											[
+												$mdgriffith$elm_ui$Element$Font$color(
+												A4($mdgriffith$elm_ui$Element$rgba255, 0, 0, 0, 1))
+											])) : $mdgriffith$elm_ui$Element$mouseOver(
+										_List_fromArray(
+											[
+												$mdgriffith$elm_ui$Element$Font$color(
+												A4($mdgriffith$elm_ui$Element$rgba255, 0, 0, 0, 1))
+											]));
+									var fontColor = invisibleWord ? $mdgriffith$elm_ui$Element$Font$color(
+										A4($mdgriffith$elm_ui$Element$rgba255, 255, 255, 255, 1)) : $mdgriffith$elm_ui$Element$Font$color(
+										A4($mdgriffith$elm_ui$Element$rgba255, 0, 0, 0, 1));
+									return function (word) {
+										return A2(
+											$mdgriffith$elm_ui$Element$row,
+											_List_fromArray(
+												[
+													$mdgriffith$elm_ui$Element$padding(10),
+													$mdgriffith$elm_ui$Element$centerY,
+													$mdgriffith$elm_ui$Element$centerX,
+													$mdgriffith$elm_ui$Element$Background$color(
+													A4($mdgriffith$elm_ui$Element$rgba255, 255, 255, 255, 1)),
+													$mdgriffith$elm_ui$Element$Border$rounded(5),
+													fontColor,
+													hoverColor
+												]),
+											_List_fromArray(
+												[
+													$mdgriffith$elm_ui$Element$text(word.name)
+												]));
+									};
+								}(),
+								width: $mdgriffith$elm_ui$Element$px(200)
+							},
+								{
+								header: A2(
+									$mdgriffith$elm_ui$Element$row,
+									_List_fromArray(
+										[
+											A2($mdgriffith$elm_ui$Element$paddingXY, 30, 40),
+											$mdgriffith$elm_ui$Element$spacing(10)
+										]),
+									_List_fromArray(
+										[
+											A2(
+											$mdgriffith$elm_ui$Element$column,
+											_List_fromArray(
+												[$mdgriffith$elm_ui$Element$centerX]),
+											_List_fromArray(
+												[
+													$mdgriffith$elm_ui$Element$text('Means')
+												])),
+											A2(
+											$mdgriffith$elm_ui$Element$column,
+											_List_fromArray(
+												[$mdgriffith$elm_ui$Element$centerX]),
+											_List_fromArray(
+												[
+													A2(
+													$mdgriffith$elm_ui$Element$Input$checkbox,
+													_List_Nil,
+													{
+														checked: invisibleMeans,
+														icon: $mdgriffith$elm_ui$Element$Input$defaultCheckbox,
+														label: A2(
+															$mdgriffith$elm_ui$Element$Input$labelRight,
+															_List_Nil,
+															$mdgriffith$elm_ui$Element$text('invisible')),
+														onChange: $author$project$Page$ListPage$InvisibleMeans
+													})
+												]))
+										])),
+								view: function () {
+									var hoverColor = invisibleMeans ? $mdgriffith$elm_ui$Element$mouseOver(
+										_List_fromArray(
+											[
+												$mdgriffith$elm_ui$Element$Font$color(
+												A4($mdgriffith$elm_ui$Element$rgba255, 0, 0, 0, 1))
+											])) : $mdgriffith$elm_ui$Element$mouseOver(
+										_List_fromArray(
+											[
+												$mdgriffith$elm_ui$Element$Font$color(
+												A4($mdgriffith$elm_ui$Element$rgba255, 0, 0, 0, 1))
+											]));
+									var fontColor = invisibleMeans ? $mdgriffith$elm_ui$Element$Font$color(
+										A4($mdgriffith$elm_ui$Element$rgba255, 255, 255, 255, 1)) : $mdgriffith$elm_ui$Element$Font$color(
+										A4($mdgriffith$elm_ui$Element$rgba255, 0, 0, 0, 1));
+									return function (word) {
+										return A2(
+											$mdgriffith$elm_ui$Element$row,
+											_List_fromArray(
+												[
+													$mdgriffith$elm_ui$Element$height(
+													$mdgriffith$elm_ui$Element$px(40)),
+													A2($mdgriffith$elm_ui$Element$paddingXY, 10, 0),
+													$mdgriffith$elm_ui$Element$centerY,
+													$mdgriffith$elm_ui$Element$Background$color(
+													A4($mdgriffith$elm_ui$Element$rgba255, 255, 255, 255, 1)),
+													$mdgriffith$elm_ui$Element$Border$rounded(5),
+													fontColor,
+													hoverColor
+												]),
+											_List_fromArray(
+												[
+													$mdgriffith$elm_ui$Element$text(word.means)
+												]));
+									};
+								}(),
+								width: $mdgriffith$elm_ui$Element$px(300)
+							},
+								{
+								header: A2(
+									$mdgriffith$elm_ui$Element$row,
+									_List_fromArray(
+										[
+											A2($mdgriffith$elm_ui$Element$paddingXY, 30, 40)
+										]),
+									_List_fromArray(
+										[
+											A2(
+											$mdgriffith$elm_ui$Element$el,
+											_List_fromArray(
+												[$mdgriffith$elm_ui$Element$centerX]),
+											$mdgriffith$elm_ui$Element$text('Edit'))
+										])),
+								view: function (word) {
+									return A2(
+										$mdgriffith$elm_ui$Element$row,
+										_List_Nil,
+										_List_fromArray(
+											[
+												A2(
+												$mdgriffith$elm_ui$Element$Input$button,
+												_List_fromArray(
+													[
+														$mdgriffith$elm_ui$Element$width(
+														$mdgriffith$elm_ui$Element$px(40)),
+														$mdgriffith$elm_ui$Element$height(
+														$mdgriffith$elm_ui$Element$px(40)),
+														$mdgriffith$elm_ui$Element$centerX,
+														$mdgriffith$elm_ui$Element$centerY,
+														$mdgriffith$elm_ui$Element$Background$color(
+														A4($mdgriffith$elm_ui$Element$rgba255, 85, 250, 91, 1)),
+														$mdgriffith$elm_ui$Element$Border$rounded(50),
+														$mdgriffith$elm_ui$Element$Border$solid,
+														$mdgriffith$elm_ui$Element$Border$color(
+														A4($mdgriffith$elm_ui$Element$rgba255, 0, 0, 0, 0.2)),
+														$mdgriffith$elm_ui$Element$Border$width(1),
+														$mdgriffith$elm_ui$Element$mouseOver(
+														_List_fromArray(
+															[
+																$mdgriffith$elm_ui$Element$Background$color(
+																A4($mdgriffith$elm_ui$Element$rgba255, 70, 200, 80, 1))
+															]))
+													]),
+												{
+													label: A2(
+														$mdgriffith$elm_ui$Element$link,
+														_List_fromArray(
+															[$mdgriffith$elm_ui$Element$centerX]),
+														{
+															label: $mdgriffith$elm_ui$Element$text('E'),
+															url: '/' + (word.language + ('/' + $author$project$Word$stringFromId(word.id)))
+														}),
+													onPress: $elm$core$Maybe$Nothing
+												})
+											]));
+								},
+								width: $mdgriffith$elm_ui$Element$fill
+							},
+								{
+								header: A2(
+									$mdgriffith$elm_ui$Element$row,
+									_List_fromArray(
+										[
+											A2($mdgriffith$elm_ui$Element$paddingXY, 30, 40)
+										]),
+									_List_fromArray(
+										[
+											A2(
+											$mdgriffith$elm_ui$Element$el,
+											_List_fromArray(
+												[$mdgriffith$elm_ui$Element$centerX]),
+											$mdgriffith$elm_ui$Element$text('Delete'))
+										])),
+								view: function (word) {
+									return A2(
+										$mdgriffith$elm_ui$Element$row,
+										_List_Nil,
+										_List_fromArray(
+											[
+												A2(
+												$mdgriffith$elm_ui$Element$Input$button,
+												_List_fromArray(
+													[
+														$mdgriffith$elm_ui$Element$width(
+														$mdgriffith$elm_ui$Element$px(40)),
+														$mdgriffith$elm_ui$Element$height(
+														$mdgriffith$elm_ui$Element$px(40)),
+														$mdgriffith$elm_ui$Element$centerX,
+														$mdgriffith$elm_ui$Element$centerY,
+														$mdgriffith$elm_ui$Element$Background$color(
+														A4($mdgriffith$elm_ui$Element$rgba255, 255, 90, 80, 1)),
+														$mdgriffith$elm_ui$Element$Border$rounded(50),
+														$mdgriffith$elm_ui$Element$Border$solid,
+														$mdgriffith$elm_ui$Element$Border$color(
+														A4($mdgriffith$elm_ui$Element$rgba255, 0, 0, 0, 0.2)),
+														$mdgriffith$elm_ui$Element$Border$width(1),
+														$mdgriffith$elm_ui$Element$mouseOver(
+														_List_fromArray(
+															[
+																$mdgriffith$elm_ui$Element$Background$color(
+																A4($mdgriffith$elm_ui$Element$rgba255, 255, 40, 40, 1))
+															]))
+													]),
+												{
+													label: A2(
+														$mdgriffith$elm_ui$Element$row,
+														_List_fromArray(
+															[$mdgriffith$elm_ui$Element$centerX]),
+														_List_fromArray(
+															[
+																$mdgriffith$elm_ui$Element$text('D')
+															])),
+													onPress: $elm$core$Maybe$Just(
+														$author$project$Page$ListPage$DeleteWord(word))
+												})
+											]));
+								},
+								width: $mdgriffith$elm_ui$Element$fill
+							}
+							]),
+						data: words
+					})
+				]));
+	});
 var $author$project$Page$ListPage$viewWordList = function (model) {
 	var _v0 = model.words;
 	switch (_v0.$) {
@@ -14439,16 +14959,50 @@ var $author$project$Page$ListPage$viewWordList = function (model) {
 					]));
 		case 'Success':
 			var words = _v0.a;
-			return $author$project$Page$ListPage$viewTable(words);
+			return A3($author$project$Page$ListPage$viewTable, words, model.invisibleMeans, model.invisibleWord);
 		default:
 			var httpError = _v0.a;
-			return $mdgriffith$elm_ui$Element$text('Error');
+			var errorHeading = 'Couldn\'t fetch posts at this time.';
+			return A2(
+				$mdgriffith$elm_ui$Element$column,
+				_List_fromArray(
+					[
+						$mdgriffith$elm_ui$Element$spacing(30),
+						$mdgriffith$elm_ui$Element$Font$family(
+						_List_fromArray(
+							[
+								$mdgriffith$elm_ui$Element$Font$typeface('Hiragino Kaku Gothic ProN'),
+								$mdgriffith$elm_ui$Element$Font$sansSerif
+							])),
+						$mdgriffith$elm_ui$Element$centerX
+					]),
+				_List_fromArray(
+					[
+						A2(
+						$mdgriffith$elm_ui$Element$el,
+						_List_fromArray(
+							[
+								$mdgriffith$elm_ui$Element$Font$bold,
+								$mdgriffith$elm_ui$Element$Font$size(24)
+							]),
+						$mdgriffith$elm_ui$Element$text(errorHeading)),
+						A2(
+						$mdgriffith$elm_ui$Element$el,
+						_List_fromArray(
+							[
+								$mdgriffith$elm_ui$Element$Font$size(16),
+								$mdgriffith$elm_ui$Element$Font$regular,
+								$mdgriffith$elm_ui$Element$centerX
+							]),
+						$mdgriffith$elm_ui$Element$text(
+							'Error : ' + $author$project$Error$buildErrorMessage(httpError)))
+					]));
 	}
 };
 var $author$project$Page$ListPage$view = function (model) {
 	var newWordButton = function () {
-		var _v0 = model.words;
-		if (_v0.$ === 'Success') {
+		var _v1 = model.words;
+		if (_v1.$ === 'Success') {
 			return A2(
 				$mdgriffith$elm_ui$Element$row,
 				_List_fromArray(
@@ -14491,35 +15045,40 @@ var $author$project$Page$ListPage$view = function (model) {
 			return $mdgriffith$elm_ui$Element$text('');
 		}
 	}();
-	return A2(
-		$mdgriffith$elm_ui$Element$layout,
-		_List_Nil,
-		A2(
-			$mdgriffith$elm_ui$Element$column,
-			_List_fromArray(
-				[
-					$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
-					$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
-					A2($mdgriffith$elm_ui$Element$paddingXY, 0, 50),
-					$mdgriffith$elm_ui$Element$Font$semiBold
-				]),
-			_List_fromArray(
-				[
-					A2(
-					$mdgriffith$elm_ui$Element$column,
-					_List_fromArray(
-						[
-							$mdgriffith$elm_ui$Element$centerX,
-							$mdgriffith$elm_ui$Element$width(
-							$mdgriffith$elm_ui$Element$px(1000)),
-							$mdgriffith$elm_ui$Element$spacing(20)
-						]),
-					_List_fromArray(
-						[
-							newWordButton,
-							$author$project$Page$ListPage$viewWordList(model)
-						]))
-				])));
+	var wordList = function () {
+		var _v0 = model.deleteError;
+		if (_v0.$ === 'Just') {
+			return $author$project$Page$ListPage$viewDeleteError(model.deleteError);
+		} else {
+			return A2(
+				$mdgriffith$elm_ui$Element$column,
+				_List_fromArray(
+					[
+						$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
+						$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
+						A2($mdgriffith$elm_ui$Element$paddingXY, 0, 50),
+						$mdgriffith$elm_ui$Element$Font$semiBold
+					]),
+				_List_fromArray(
+					[
+						A2(
+						$mdgriffith$elm_ui$Element$column,
+						_List_fromArray(
+							[
+								$mdgriffith$elm_ui$Element$centerX,
+								$mdgriffith$elm_ui$Element$width(
+								$mdgriffith$elm_ui$Element$px(1000)),
+								$mdgriffith$elm_ui$Element$spacing(20)
+							]),
+						_List_fromArray(
+							[
+								newWordButton,
+								$author$project$Page$ListPage$viewWordList(model)
+							]))
+					]));
+		}
+	}();
+	return A2($mdgriffith$elm_ui$Element$layout, _List_Nil, wordList);
 };
 var $author$project$Page$Register$RegisterWord = {$: 'RegisterWord'};
 var $author$project$Page$Register$SelectLanguage = function (a) {
@@ -14670,40 +15229,46 @@ var $author$project$Page$Register$viewRegisterForm = function (model) {
 			]));
 };
 var $author$project$Page$Register$view = function (model) {
-	return A2(
-		$elm$html$Html$div,
-		_List_fromArray(
-			[
-				A2($elm$html$Html$Attributes$style, 'width', '100%'),
-				A2($elm$html$Html$Attributes$style, 'height', '100%'),
-				A2($elm$html$Html$Attributes$style, 'margin-top', '50px')
-			]),
-		_List_fromArray(
-			[
-				A2(
-				$elm$html$Html$h1,
+	var registerForm = function () {
+		var _v0 = model.registerError;
+		if (_v0.$ === 'Just') {
+			return A2(
+				$elm$html$Html$div,
 				_List_fromArray(
 					[
-						A2($elm$html$Html$Attributes$style, 'text-align', 'center'),
-						A2($elm$html$Html$Attributes$style, 'font-size', '30px')
+						A2($elm$html$Html$Attributes$style, 'text-align', 'center')
 					]),
 				_List_fromArray(
 					[
-						$elm$html$Html$text('New Word')
-					])),
-				$author$project$Page$Register$viewRegisterForm(model),
-				$author$project$Form$viewSaveError(model.registerError)
-			]));
-};
-var $mdgriffith$elm_ui$Element$Font$color = function (fontColor) {
-	return A2(
-		$mdgriffith$elm_ui$Internal$Model$StyleClass,
-		$mdgriffith$elm_ui$Internal$Flag$fontColor,
-		A3(
-			$mdgriffith$elm_ui$Internal$Model$Colored,
-			'fc-' + $mdgriffith$elm_ui$Internal$Model$formatColorClass(fontColor),
-			'color',
-			fontColor));
+						$author$project$Form$viewSaveError(model.registerError)
+					]));
+		} else {
+			return A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						A2($elm$html$Html$Attributes$style, 'width', '100%'),
+						A2($elm$html$Html$Attributes$style, 'height', '100%'),
+						A2($elm$html$Html$Attributes$style, 'margin-top', '50px')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						$elm$html$Html$h1,
+						_List_fromArray(
+							[
+								A2($elm$html$Html$Attributes$style, 'text-align', 'center'),
+								A2($elm$html$Html$Attributes$style, 'font-size', '30px')
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$text('New Word')
+							])),
+						$author$project$Page$Register$viewRegisterForm(model)
+					]));
+		}
+	}();
+	return registerForm;
 };
 var $author$project$Page$Top$selectLangButton = F2(
 	function (buttonLabel, path) {

@@ -3,7 +3,7 @@ module Page.Edit exposing (Model, Msg, init, update, view)
 import Browser.Navigation as Nav
 import Error exposing (buildErrorMessage, viewFetchError)
 import Form exposing (FormError, FormField(..))
-import Html exposing (Html, br, button, div, h1, h2, input, label, option, p, select, strong, text)
+import Html exposing (Html, br, button, div, h1, input, label, option, p, select, strong, text)
 import Html.Attributes exposing (hidden, style, type_, value)
 import Html.Events exposing (onInput, onSubmit)
 import Http
@@ -150,27 +150,34 @@ saveEdit word =
 view : Model -> Html Msg
 view model =
     let
-        theme =
+        label =
             case model.word of
                 RemoteData.Success _ ->
                     "Edit Word"
 
                 _ ->
                     ""
+
+        editForm =
+            case model.saveError of
+                Just _ ->
+                    div [ style "text-align" "center" ] [ Form.viewSaveError model.saveError ]
+
+                Nothing ->
+                    div
+                        [ style "width" "100%"
+                        , style "height" "100%"
+                        , style "margin-top" "50px"
+                        ]
+                        [ h1
+                            [ style "text-align" "center"
+                            , style "font-size" "30px"
+                            ]
+                            [ text label ]
+                        , viewWord model
+                        ]
     in
-    div
-        [ style "width" "100%"
-        , style "height" "100%"
-        , style "margin-top" "50px"
-        ]
-        [ h1
-            [ style "text-align" "center"
-            , style "font-size" "30px"
-            ]
-            [ text theme ]
-        , viewWord model
-        , Form.viewSaveError model.saveError
-        ]
+    editForm
 
 
 viewWord : Model -> Html Msg

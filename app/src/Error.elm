@@ -1,6 +1,7 @@
 module Error exposing (buildErrorMessage, viewDeleteError, viewFetchError)
 
 import Html exposing (Html, div, h2, text)
+import Html.Attributes exposing (style)
 import Http
 
 
@@ -29,7 +30,7 @@ viewFetchError errorMessage =
         errorHeading =
             "Couldn't fetch posts at this time."
     in
-    div []
+    div [ style "text-align" "center" ]
         [ h2 [] [ text errorHeading ]
         , text ("Error : " ++ errorMessage)
         ]
