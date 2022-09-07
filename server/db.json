@@ -1,0 +1,90 @@
+{
+  "english": [
+    {
+      "name": "mango",
+      "means": "マンゴー",
+      "language": "english",
+      "id": 4
+    },
+    {
+      "name": "lion",
+      "means": "ライオン",
+      "language": "english",
+      "id": 5
+    },
+    {
+      "name": "sky",
+      "means": "空",
+      "language": "english",
+      "id": 6
+    },
+    {
+      "name": "apple",
+      "means": "りんご",
+      "language": "english",
+      "id": 7
+    },
+    {
+      "name": "pineapple",
+      "means": "パイナップル",
+      "language": "english",
+      "id": 8
+    },
+    {
+      "name": "receive",
+      "means": "受ける",
+      "language": "english",
+      "id": 9
+    },
+    {
+      "name": "send",
+      "means": "送る",
+      "language": "english",
+      "id": 10
+    }
+  ],
+  "korean": [
+    {
+      "id": 1,
+      "name": "사과",
+      "means": "りんご",
+      "language": "korean"
+    },
+    {
+      "name": "포도",
+      "means": "ぶどう",
+      "language": "korean",
+      "id": 2
+    },
+    {
+      "name": "딸기",
+      "means": "いちご",
+      "language": "korean",
+      "id": 3
+    },
+    {
+      "name": "배",
+      "means": "船、腹、梨",
+      "language": "korean",
+      "id": 4
+    },
+    {
+      "name": "해바라기",
+      "means": "ひまわり",
+      "language": "korean",
+      "id": 5
+    },
+    {
+      "name": "하늘",
+      "means": "空",
+      "language": "korean",
+      "id": 6
+    },
+    {
+      "name": "꿈",
+      "means": "夢",
+      "language": "korean",
+      "id": 7
+    }
+  ]
+}
