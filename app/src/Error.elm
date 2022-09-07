@@ -1,4 +1,4 @@
-module Error exposing (buildErrorMessage, viewDeleteError, viewFetchError)
+module Error exposing (buildErrorMessage, viewFetchError)
 
 import Html exposing (Html, div, h2, text)
 import Html.Attributes exposing (style)
@@ -34,16 +34,3 @@ viewFetchError errorMessage =
         [ h2 [] [ text errorHeading ]
         , text ("Error : " ++ errorMessage)
         ]
-
-
-viewDeleteError : Maybe String -> Html msg
-viewDeleteError deleteError =
-    case deleteError of
-        Just error ->
-            div []
-                [ h2 [] [ text "Couldn't delete post at this time." ]
-                , text ("Error : " ++ error)
-                ]
-
-        Nothing ->
-            text ""
