@@ -1,7 +1,7 @@
 module Page.Top exposing (Model, Msg, init, view)
 
-import Element exposing (Element, alignRight, centerX, centerY, column, el, explain, fill, height, layout, link, mouseOver, padding, paddingEach, paddingXY, px, rgba255, row, spacing, text, width)
-import Element.Background as Background exposing (color)
+import Element exposing (Element, alignRight, centerX, centerY, column, el, fill, height, layout, link, mouseOver, padding, paddingEach, paddingXY, px, rgba255, row, spacing, text, width)
+import Element.Background as Background
 import Element.Border as Border
 import Element.Font as Font exposing (letterSpacing)
 import Element.Input exposing (button)

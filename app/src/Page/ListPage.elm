@@ -1,9 +1,8 @@
 module Page.ListPage exposing (Model, Msg, init, update, view)
 
-import Element exposing (Element, alignLeft, alignRight, centerX, centerY, column, el, explain, fill, height, layout, link, mouseOver, none, padding, paddingEach, paddingXY, px, rgba255, row, spacing, spacingXY, table, text, width)
+import Element exposing (Element, alignRight, centerX, centerY, column, el, fill, height, layout, link, mouseOver, padding, paddingEach, paddingXY, px, rgba255, row, spacing, table, text, width)
 import Element.Background as Background
 import Element.Border as Border
-import Element.Events as Events
 import Element.Font as Font
 import Element.Input as Input exposing (button, checkbox)
 import Error exposing (buildErrorMessage)

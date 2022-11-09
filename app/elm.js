@@ -7361,30 +7361,40 @@ var $elm$html$Html$map = $elm$virtual_dom$VirtualDom$map;
 var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
 var $elm$html$Html$div = _VirtualDom_node('div');
-var $elm$html$Html$h1 = _VirtualDom_node('h1');
 var $elm$virtual_dom$VirtualDom$style = _VirtualDom_style;
 var $elm$html$Html$Attributes$style = $elm$virtual_dom$VirtualDom$style;
+var $author$project$Css$formViewStyle = _List_fromArray(
+	[
+		A2($elm$html$Html$Attributes$style, 'width', '100%'),
+		A2($elm$html$Html$Attributes$style, 'height', '100%'),
+		A2($elm$html$Html$Attributes$style, 'margin-top', '50px')
+	]);
+var $elm$html$Html$h1 = _VirtualDom_node('h1');
+var $author$project$Css$saveErrorStyle = _List_fromArray(
+	[
+		A2($elm$html$Html$Attributes$style, 'text-align', 'center')
+	]);
+var $author$project$Css$viewH1Style = _List_fromArray(
+	[
+		A2($elm$html$Html$Attributes$style, 'text-align', 'center'),
+		A2($elm$html$Html$Attributes$style, 'font-size', '30px')
+	]);
 var $elm$html$Html$h2 = _VirtualDom_node('h2');
-var $author$project$Form$viewSaveError = function (maybeError) {
-	if (maybeError.$ === 'Just') {
-		var error = maybeError.a;
-		return A2(
-			$elm$html$Html$div,
-			_List_Nil,
-			_List_fromArray(
-				[
-					A2(
-					$elm$html$Html$h2,
-					_List_Nil,
-					_List_fromArray(
-						[
-							$elm$html$Html$text('Couldn\'t save a word at this time.')
-						])),
-					$elm$html$Html$text('Error : ' + error)
-				]));
-	} else {
-		return $elm$html$Html$text('');
-	}
+var $author$project$Form$viewSaveError = function (error) {
+	return A2(
+		$elm$html$Html$div,
+		_List_Nil,
+		_List_fromArray(
+			[
+				A2(
+				$elm$html$Html$h2,
+				_List_Nil,
+				_List_fromArray(
+					[
+						$elm$html$Html$text('Couldn\'t save a word at this time.')
+					])),
+				$elm$html$Html$text('Error : ' + error)
+			]));
 };
 var $elm$html$Html$p = _VirtualDom_node('p');
 var $author$project$Page$Edit$SaveEdit = function (a) {
@@ -7485,14 +7495,25 @@ var $author$project$Form$viewFormErrors = F2(
 					},
 					errors)));
 	});
+var $author$project$Css$viewFormFieldInputStyle = _List_fromArray(
+	[
+		A2($elm$html$Html$Attributes$style, 'width', '250px'),
+		A2($elm$html$Html$Attributes$style, 'height', '25px'),
+		A2($elm$html$Html$Attributes$style, 'border-radius', '5px'),
+		A2($elm$html$Html$Attributes$style, 'border', 'solid 1px rgba(0, 0, 0, 0.8)'),
+		A2($elm$html$Html$Attributes$style, 'font-size', '20px'),
+		A2($elm$html$Html$Attributes$style, 'text-align', 'center'),
+		A2($elm$html$Html$Attributes$style, 'margin-top', '10px')
+	]);
+var $author$project$Css$viewFormFieldStyle = _List_fromArray(
+	[
+		A2($elm$html$Html$Attributes$style, 'margin-top', '50px')
+	]);
 var $author$project$Page$Edit$editFormElement = F5(
 	function (formField, errors, inputLabel, oldValue, msg) {
 		return A2(
 			$elm$html$Html$label,
-			_List_fromArray(
-				[
-					A2($elm$html$Html$Attributes$style, 'margin-top', '50px')
-				]),
+			$author$project$Css$viewFormFieldStyle,
 			_List_fromArray(
 				[
 					A2(
@@ -7505,19 +7526,14 @@ var $author$project$Page$Edit$editFormElement = F5(
 					A2($elm$html$Html$br, _List_Nil, _List_Nil),
 					A2(
 					$elm$html$Html$input,
-					_List_fromArray(
-						[
-							$elm$html$Html$Attributes$type_('text'),
-							$elm$html$Html$Attributes$value(oldValue),
-							$elm$html$Html$Events$onInput(msg),
-							A2($elm$html$Html$Attributes$style, 'width', '250px'),
-							A2($elm$html$Html$Attributes$style, 'height', '25px'),
-							A2($elm$html$Html$Attributes$style, 'border-radius', '5px'),
-							A2($elm$html$Html$Attributes$style, 'border', 'solid 1px rgba(0, 0, 0, 0.8)'),
-							A2($elm$html$Html$Attributes$style, 'font-size', '20px'),
-							A2($elm$html$Html$Attributes$style, 'text-align', 'center'),
-							A2($elm$html$Html$Attributes$style, 'margin-top', '10px')
-						]),
+					_Utils_ap(
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$type_('text'),
+								$elm$html$Html$Attributes$value(oldValue),
+								$elm$html$Html$Events$onInput(msg)
+							]),
+						$author$project$Css$viewFormFieldInputStyle),
 					_List_Nil),
 					A2($author$project$Form$viewFormErrors, formField, errors)
 				]));
@@ -7557,26 +7573,49 @@ var $elm$html$Html$Events$onSubmit = function (msg) {
 var $elm$html$Html$option = _VirtualDom_node('option');
 var $elm$html$Html$select = _VirtualDom_node('select');
 var $elm$core$String$toUpper = _String_toUpper;
+var $author$project$Css$viewFormButtonStyle = _List_fromArray(
+	[
+		A2($elm$html$Html$Attributes$style, 'width', '120px'),
+		A2($elm$html$Html$Attributes$style, 'height', '40px'),
+		A2($elm$html$Html$Attributes$style, 'margin-top', '20px'),
+		A2($elm$html$Html$Attributes$style, 'border-radius', '10px'),
+		A2($elm$html$Html$Attributes$style, 'border', 'solid 1px rgba(0, 0, 0, 0.2)'),
+		A2($elm$html$Html$Attributes$style, 'background-color', '#36bcff'),
+		A2($elm$html$Html$Attributes$style, 'color', '#ffffff')
+	]);
+var $author$project$Css$viewFormSelectStyle = _List_fromArray(
+	[
+		A2($elm$html$Html$Attributes$style, 'width', '250px'),
+		A2($elm$html$Html$Attributes$style, 'height', '30px'),
+		A2($elm$html$Html$Attributes$style, 'margin-top', '10px'),
+		A2($elm$html$Html$Attributes$style, 'text-align', 'center'),
+		A2($elm$html$Html$Attributes$style, 'font-weight', 'bold'),
+		A2($elm$html$Html$Attributes$style, 'border-radius', '5px'),
+		A2($elm$html$Html$Attributes$style, 'border', 'solid 1px solid 1px rgba(0, 0, 0, 0.8)')
+	]);
+var $author$project$Css$viewFormStyle = _List_fromArray(
+	[
+		A2($elm$html$Html$Attributes$style, 'width', '400px'),
+		A2($elm$html$Html$Attributes$style, 'height', '400px'),
+		A2($elm$html$Html$Attributes$style, 'text-align', 'center'),
+		A2($elm$html$Html$Attributes$style, 'margin-left', 'auto'),
+		A2($elm$html$Html$Attributes$style, 'margin-right', 'auto'),
+		A2($elm$html$Html$Attributes$style, 'margin-top', '10px'),
+		A2($elm$html$Html$Attributes$style, 'background-color', 'rgba(200, 200, 200, 0.8)'),
+		A2($elm$html$Html$Attributes$style, 'border-radius', '5px'),
+		A2($elm$html$Html$Attributes$style, 'border', 'solid 1px rgba(0, 0, 0, 0.2)'),
+		A2($elm$html$Html$Attributes$style, 'padding-top', '50px'),
+		A2($elm$html$Html$Attributes$style, 'letter-spacing', '2px')
+	]);
 var $author$project$Page$Edit$viewEditForm = F2(
 	function (model, word) {
 		return A2(
 			$elm$html$Html$form,
-			_List_fromArray(
-				[
-					$elm$html$Html$Events$onSubmit(
+			A2(
+				$elm$core$List$cons,
+				$elm$html$Html$Events$onSubmit(
 					$author$project$Page$Edit$SaveEdit(word)),
-					A2($elm$html$Html$Attributes$style, 'width', '400px'),
-					A2($elm$html$Html$Attributes$style, 'height', '400px'),
-					A2($elm$html$Html$Attributes$style, 'text-align', 'center'),
-					A2($elm$html$Html$Attributes$style, 'margin-left', 'auto'),
-					A2($elm$html$Html$Attributes$style, 'margin-right', 'auto'),
-					A2($elm$html$Html$Attributes$style, 'margin-top', '10px'),
-					A2($elm$html$Html$Attributes$style, 'background-color', 'rgba(200, 200, 200, 0.8)'),
-					A2($elm$html$Html$Attributes$style, 'border-radius', '5px'),
-					A2($elm$html$Html$Attributes$style, 'border', 'solid 1px rgba(0, 0, 0, 0.2)'),
-					A2($elm$html$Html$Attributes$style, 'padding-top', '50px'),
-					A2($elm$html$Html$Attributes$style, 'letter-spacing', '2px')
-				]),
+				$author$project$Css$viewFormStyle),
 			_List_fromArray(
 				[
 					A5($author$project$Page$Edit$editFormElement, $author$project$Form$Name, model.formErrors, 'Word', word.name, $author$project$Page$Edit$UpdateName),
@@ -7596,17 +7635,10 @@ var $author$project$Page$Edit$viewEditForm = F2(
 							A2($elm$html$Html$br, _List_Nil, _List_Nil),
 							A2(
 							$elm$html$Html$select,
-							_List_fromArray(
-								[
-									$elm$html$Html$Events$onInput($author$project$Page$Edit$UpdateLanguage),
-									A2($elm$html$Html$Attributes$style, 'width', '250px'),
-									A2($elm$html$Html$Attributes$style, 'height', '30px'),
-									A2($elm$html$Html$Attributes$style, 'margin-top', '10px'),
-									A2($elm$html$Html$Attributes$style, 'text-align', 'center'),
-									A2($elm$html$Html$Attributes$style, 'font-weight', 'bold'),
-									A2($elm$html$Html$Attributes$style, 'border-radius', '5px'),
-									A2($elm$html$Html$Attributes$style, 'border', 'solid 1px solid 1px rgba(0, 0, 0, 0.8)')
-								]),
+							A2(
+								$elm$core$List$cons,
+								$elm$html$Html$Events$onInput($author$project$Page$Edit$UpdateLanguage),
+								$author$project$Css$viewFormSelectStyle),
 							_List_fromArray(
 								[
 									A2(
@@ -7646,16 +7678,7 @@ var $author$project$Page$Edit$viewEditForm = F2(
 						])),
 					A2(
 					$elm$html$Html$button,
-					_List_fromArray(
-						[
-							A2($elm$html$Html$Attributes$style, 'width', '120px'),
-							A2($elm$html$Html$Attributes$style, 'height', '40px'),
-							A2($elm$html$Html$Attributes$style, 'margin-top', '20px'),
-							A2($elm$html$Html$Attributes$style, 'border-radius', '10px'),
-							A2($elm$html$Html$Attributes$style, 'border', 'solid 1px rgba(0, 0, 0, 0.2)'),
-							A2($elm$html$Html$Attributes$style, 'background-color', '#36bcff'),
-							A2($elm$html$Html$Attributes$style, 'color', '#ffffff')
-						]),
+					$author$project$Css$viewFormButtonStyle,
 					_List_fromArray(
 						[
 							$elm$html$Html$text('Save')
@@ -7723,34 +7746,23 @@ var $author$project$Page$Edit$view = function (model) {
 	var editForm = function () {
 		var _v0 = model.saveError;
 		if (_v0.$ === 'Just') {
+			var error = _v0.a;
 			return A2(
 				$elm$html$Html$div,
+				$author$project$Css$saveErrorStyle,
 				_List_fromArray(
 					[
-						A2($elm$html$Html$Attributes$style, 'text-align', 'center')
-					]),
-				_List_fromArray(
-					[
-						$author$project$Form$viewSaveError(model.saveError)
+						$author$project$Form$viewSaveError(error)
 					]));
 		} else {
 			return A2(
 				$elm$html$Html$div,
-				_List_fromArray(
-					[
-						A2($elm$html$Html$Attributes$style, 'width', '100%'),
-						A2($elm$html$Html$Attributes$style, 'height', '100%'),
-						A2($elm$html$Html$Attributes$style, 'margin-top', '50px')
-					]),
+				$author$project$Css$formViewStyle,
 				_List_fromArray(
 					[
 						A2(
 						$elm$html$Html$h1,
-						_List_fromArray(
-							[
-								A2($elm$html$Html$Attributes$style, 'text-align', 'center'),
-								A2($elm$html$Html$Attributes$style, 'font-size', '30px')
-							]),
+						$author$project$Css$viewH1Style,
 						_List_fromArray(
 							[
 								$elm$html$Html$text(label)
@@ -15090,14 +15102,11 @@ var $author$project$Page$Register$StoreMeans = function (a) {
 var $author$project$Page$Register$StoreName = function (a) {
 	return {$: 'StoreName', a: a};
 };
-var $author$project$Page$Register$registerFormElement = F4(
+var $author$project$Page$Register$registerFormField = F4(
 	function (formField, errors, inputLabel, msg) {
 		return A2(
 			$elm$html$Html$label,
-			_List_fromArray(
-				[
-					A2($elm$html$Html$Attributes$style, 'margin-top', '50px')
-				]),
+			$author$project$Css$viewFormFieldStyle,
 			_List_fromArray(
 				[
 					A2(
@@ -15110,18 +15119,13 @@ var $author$project$Page$Register$registerFormElement = F4(
 					A2($elm$html$Html$br, _List_Nil, _List_Nil),
 					A2(
 					$elm$html$Html$input,
-					_List_fromArray(
-						[
-							$elm$html$Html$Attributes$type_('text'),
-							$elm$html$Html$Events$onInput(msg),
-							A2($elm$html$Html$Attributes$style, 'width', '250px'),
-							A2($elm$html$Html$Attributes$style, 'height', '25px'),
-							A2($elm$html$Html$Attributes$style, 'border-radius', '5px'),
-							A2($elm$html$Html$Attributes$style, 'border', 'solid 1px rgba(0, 0, 0, 0.8)'),
-							A2($elm$html$Html$Attributes$style, 'font-size', '20px'),
-							A2($elm$html$Html$Attributes$style, 'text-align', 'center'),
-							A2($elm$html$Html$Attributes$style, 'margin-top', '10px')
-						]),
+					_Utils_ap(
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$type_('text'),
+								$elm$html$Html$Events$onInput(msg)
+							]),
+						$author$project$Css$viewFormFieldInputStyle),
 					_List_Nil),
 					A2($author$project$Form$viewFormErrors, formField, errors)
 				]));
@@ -15129,25 +15133,14 @@ var $author$project$Page$Register$registerFormElement = F4(
 var $author$project$Page$Register$viewRegisterForm = function (model) {
 	return A2(
 		$elm$html$Html$form,
+		A2(
+			$elm$core$List$cons,
+			$elm$html$Html$Events$onSubmit($author$project$Page$Register$RegisterWord),
+			$author$project$Css$viewFormStyle),
 		_List_fromArray(
 			[
-				$elm$html$Html$Events$onSubmit($author$project$Page$Register$RegisterWord),
-				A2($elm$html$Html$Attributes$style, 'width', '400px'),
-				A2($elm$html$Html$Attributes$style, 'height', '400px'),
-				A2($elm$html$Html$Attributes$style, 'text-align', 'center'),
-				A2($elm$html$Html$Attributes$style, 'margin-left', 'auto'),
-				A2($elm$html$Html$Attributes$style, 'margin-right', 'auto'),
-				A2($elm$html$Html$Attributes$style, 'margin-top', '10px'),
-				A2($elm$html$Html$Attributes$style, 'background-color', 'rgba(200, 200, 200, 0.8)'),
-				A2($elm$html$Html$Attributes$style, 'border-radius', '5px'),
-				A2($elm$html$Html$Attributes$style, 'border', 'solid 1px rgba(0, 0, 0, 0.2)'),
-				A2($elm$html$Html$Attributes$style, 'padding-top', '50px'),
-				A2($elm$html$Html$Attributes$style, 'letter-spacing', '2px')
-			]),
-		_List_fromArray(
-			[
-				A4($author$project$Page$Register$registerFormElement, $author$project$Form$Name, model.formErrors, 'Word', $author$project$Page$Register$StoreName),
-				A4($author$project$Page$Register$registerFormElement, $author$project$Form$Means, model.formErrors, 'Means', $author$project$Page$Register$StoreMeans),
+				A4($author$project$Page$Register$registerFormField, $author$project$Form$Name, model.formErrors, 'Word', $author$project$Page$Register$StoreName),
+				A4($author$project$Page$Register$registerFormField, $author$project$Form$Means, model.formErrors, 'Means', $author$project$Page$Register$StoreMeans),
 				A2(
 				$elm$html$Html$div,
 				_List_Nil,
@@ -15163,17 +15156,10 @@ var $author$project$Page$Register$viewRegisterForm = function (model) {
 						A2($elm$html$Html$br, _List_Nil, _List_Nil),
 						A2(
 						$elm$html$Html$select,
-						_List_fromArray(
-							[
-								$elm$html$Html$Events$onInput($author$project$Page$Register$SelectLanguage),
-								A2($elm$html$Html$Attributes$style, 'width', '250px'),
-								A2($elm$html$Html$Attributes$style, 'height', '30px'),
-								A2($elm$html$Html$Attributes$style, 'margin-top', '10px'),
-								A2($elm$html$Html$Attributes$style, 'text-align', 'center'),
-								A2($elm$html$Html$Attributes$style, 'font-weight', 'bold'),
-								A2($elm$html$Html$Attributes$style, 'border-radius', '5px'),
-								A2($elm$html$Html$Attributes$style, 'border', 'solid 1px solid 1px rgba(0, 0, 0, 0.8)')
-							]),
+						A2(
+							$elm$core$List$cons,
+							$elm$html$Html$Events$onInput($author$project$Page$Register$SelectLanguage),
+							$author$project$Css$viewFormSelectStyle),
 						_List_fromArray(
 							[
 								A2(
@@ -15212,16 +15198,7 @@ var $author$project$Page$Register$viewRegisterForm = function (model) {
 					])),
 				A2(
 				$elm$html$Html$button,
-				_List_fromArray(
-					[
-						A2($elm$html$Html$Attributes$style, 'width', '120px'),
-						A2($elm$html$Html$Attributes$style, 'height', '40px'),
-						A2($elm$html$Html$Attributes$style, 'margin-top', '20px'),
-						A2($elm$html$Html$Attributes$style, 'border-radius', '10px'),
-						A2($elm$html$Html$Attributes$style, 'border', 'solid 1px rgba(0, 0, 0, 0.2)'),
-						A2($elm$html$Html$Attributes$style, 'background-color', '#36bcff'),
-						A2($elm$html$Html$Attributes$style, 'color', '#ffffff')
-					]),
+				$author$project$Css$viewFormButtonStyle,
 				_List_fromArray(
 					[
 						$elm$html$Html$text('Register')
@@ -15232,34 +15209,23 @@ var $author$project$Page$Register$view = function (model) {
 	var registerForm = function () {
 		var _v0 = model.registerError;
 		if (_v0.$ === 'Just') {
+			var error = _v0.a;
 			return A2(
 				$elm$html$Html$div,
+				$author$project$Css$saveErrorStyle,
 				_List_fromArray(
 					[
-						A2($elm$html$Html$Attributes$style, 'text-align', 'center')
-					]),
-				_List_fromArray(
-					[
-						$author$project$Form$viewSaveError(model.registerError)
+						$author$project$Form$viewSaveError(error)
 					]));
 		} else {
 			return A2(
 				$elm$html$Html$div,
-				_List_fromArray(
-					[
-						A2($elm$html$Html$Attributes$style, 'width', '100%'),
-						A2($elm$html$Html$Attributes$style, 'height', '100%'),
-						A2($elm$html$Html$Attributes$style, 'margin-top', '50px')
-					]),
+				$author$project$Css$formViewStyle,
 				_List_fromArray(
 					[
 						A2(
 						$elm$html$Html$h1,
-						_List_fromArray(
-							[
-								A2($elm$html$Html$Attributes$style, 'text-align', 'center'),
-								A2($elm$html$Html$Attributes$style, 'font-size', '30px')
-							]),
+						$author$project$Css$viewH1Style,
 						_List_fromArray(
 							[
 								$elm$html$Html$text('New Word')

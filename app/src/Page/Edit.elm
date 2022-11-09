@@ -1,6 +1,7 @@
 module Page.Edit exposing (Model, Msg, init, update, view)
 
 import Browser.Navigation as Nav
+import Css exposing (formViewStyle, saveErrorStyle, viewFormButtonStyle, viewFormFieldInputStyle, viewFormFieldStyle, viewFormSelectStyle, viewFormStyle, viewH1Style)
 import Error exposing (buildErrorMessage, viewFetchError)
 import Form exposing (FormError, FormField(..))
 import Html exposing (Html, br, button, div, h1, input, label, option, p, select, strong, text)
@@ -160,19 +161,16 @@ view model =
 
         editForm =
             case model.saveError of
-                Just _ ->
-                    div [ style "text-align" "center" ] [ Form.viewSaveError model.saveError ]
+                Just error ->
+                    div
+                        saveErrorStyle
+                        [ Form.viewSaveError error ]
 
                 Nothing ->
                     div
-                        [ style "width" "100%"
-                        , style "height" "100%"
-                        , style "margin-top" "50px"
-                        ]
+                        formViewStyle
                         [ h1
-                            [ style "text-align" "center"
-                            , style "font-size" "30px"
-                            ]
+                            viewH1Style
                             [ text label ]
                         , viewWord model
                         ]
@@ -206,34 +204,14 @@ viewWord model =
 viewEditForm : Model -> Word -> Html Msg
 viewEditForm model word =
     Html.form
-        [ onSubmit (SaveEdit word)
-        , style "width" "400px"
-        , style "height" "400px"
-        , style "text-align" "center"
-        , style "margin-left" "auto"
-        , style "margin-right" "auto"
-        , style "margin-top" "10px"
-        , style "background-color" "rgba(200, 200, 200, 0.8)"
-        , style "border-radius" "5px"
-        , style "border" "solid 1px rgba(0, 0, 0, 0.2)"
-        , style "padding-top" "50px"
-        , style "letter-spacing" "2px"
-        ]
+        (onSubmit (SaveEdit word) :: viewFormStyle)
         [ editFormElement Name model.formErrors "Word" word.name UpdateName
         , editFormElement Means model.formErrors "Means" word.means UpdateMeans
         , div []
             [ strong [] [ text "Language" ]
             , br [] []
             , select
-                [ onInput UpdateLanguage
-                , style "width" "250px"
-                , style "height" "30px"
-                , style "margin-top" "10px"
-                , style "text-align" "center"
-                , style "font-weight" "bold"
-                , style "border-radius" "5px"
-                , style "border" "solid 1px solid 1px rgba(0, 0, 0, 0.8)"
-                ]
+                (onInput UpdateLanguage :: viewFormSelectStyle)
                 [ option [ hidden True, value word.language ] [ text (String.toUpper word.language) ]
                 , option [ value "english" ] [ text "ENGLISH" ]
                 , option [ value "korean" ] [ text "KOREAN" ]
@@ -241,35 +219,23 @@ viewEditForm model word =
             , Form.viewFormErrors Language model.formErrors
             ]
         , button
-            [ style "width" "120px"
-            , style "height" "40px"
-            , style "margin-top" "20px"
-            , style "border-radius" "10px"
-            , style "border" "solid 1px rgba(0, 0, 0, 0.2)"
-            , style "background-color" "#36bcff"
-            , style "color" "#ffffff"
-            ]
+            viewFormButtonStyle
             [ text "Save" ]
         ]
 
 
 editFormElement : FormField -> List FormError -> String -> String -> (String -> Msg) -> Html Msg
 editFormElement formField errors inputLabel oldValue msg =
-    label [ style "margin-top" "50px" ]
+    label viewFormFieldStyle
         [ strong [] [ text inputLabel ]
         , br [] []
         , input
-            [ type_ "text"
-            , value oldValue
-            , onInput msg
-            , style "width" "250px"
-            , style "height" "25px"
-            , style "border-radius" "5px"
-            , style "border" "solid 1px rgba(0, 0, 0, 0.8)"
-            , style "font-size" "20px"
-            , style "text-align" "center"
-            , style "margin-top" "10px"
-            ]
+            ([ type_ "text"
+             , value oldValue
+             , onInput msg
+             ]
+                ++ viewFormFieldInputStyle
+            )
             []
         , Form.viewFormErrors formField errors
         ]

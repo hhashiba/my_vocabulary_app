@@ -16,18 +16,13 @@ type alias FormError =
     ( FormField, String )
 
 
-viewSaveError : Maybe String -> Html msg
-viewSaveError maybeError =
-    case maybeError of
-        Just error ->
-            div []
-                [ h2 []
-                    [ text "Couldn't save a word at this time." ]
-                , text ("Error : " ++ error)
-                ]
-
-        Nothing ->
-            text ""
+viewSaveError : String -> Html msg
+viewSaveError error =
+    div []
+        [ h2 []
+            [ text "Couldn't save a word at this time." ]
+        , text ("Error : " ++ error)
+        ]
 
 
 viewFormErrors : FormField -> List FormError -> Html msg

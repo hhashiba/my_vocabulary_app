@@ -1,10 +1,11 @@
 module Page.Register exposing (Model, Msg, init, update, view)
 
 import Browser.Navigation as Nav
+import Css exposing (formViewStyle, saveErrorStyle, viewFormButtonStyle, viewFormFieldInputStyle, viewFormFieldStyle, viewFormSelectStyle, viewFormStyle, viewH1Style)
 import Error exposing (buildErrorMessage)
 import Form exposing (FormError, FormField(..))
-import Html exposing (Html, br, button, div, h1, input, label, li, option, select, strong, text)
-import Html.Attributes exposing (hidden, style, type_, value)
+import Html exposing (Html, br, button, div, h1, input, label, option, select, strong, text)
+import Html.Attributes exposing (hidden, type_, value)
 import Html.Events exposing (onInput, onSubmit)
 import Http
 import Route
@@ -109,19 +110,16 @@ view model =
     let
         registerForm =
             case model.registerError of
-                Just _ ->
-                    div [ style "text-align" "center" ] [ Form.viewSaveError model.registerError ]
+                Just error ->
+                    div
+                        saveErrorStyle
+                        [ Form.viewSaveError error ]
 
                 Nothing ->
                     div
-                        [ style "width" "100%"
-                        , style "height" "100%"
-                        , style "margin-top" "50px"
-                        ]
+                        formViewStyle
                         [ h1
-                            [ style "text-align" "center"
-                            , style "font-size" "30px"
-                            ]
+                            viewH1Style
                             [ text "New Word" ]
                         , viewRegisterForm model
                         ]
@@ -132,38 +130,16 @@ view model =
 viewRegisterForm : Model -> Html Msg
 viewRegisterForm model =
     Html.form
-        [ onSubmit RegisterWord
-        , style "width" "400px"
-        , style "height" "400px"
-        , style "text-align" "center"
-        , style "margin-left" "auto"
-        , style "margin-right" "auto"
-        , style "margin-top" "10px"
-        , style "background-color" "rgba(200, 200, 200, 0.8)"
-        , style "border-radius" "5px"
-        , style "border" "solid 1px rgba(0, 0, 0, 0.2)"
-        , style "padding-top" "50px"
-        , style "letter-spacing" "2px"
-        ]
-        [ registerFormElement Name model.formErrors "Word" StoreName
-        , registerFormElement Means model.formErrors "Means" StoreMeans
+        (onSubmit RegisterWord :: viewFormStyle)
+        [ registerFormField Name model.formErrors "Word" StoreName
+        , registerFormField Means model.formErrors "Means" StoreMeans
         , div []
             [ strong [] [ text "Language" ]
             , br [] []
             , select
-                [ onInput SelectLanguage
-                , style "width" "250px"
-                , style "height" "30px"
-                , style "margin-top" "10px"
-                , style "text-align" "center"
-                , style "font-weight" "bold"
-                , style "border-radius" "5px"
-                , style "border" "solid 1px solid 1px rgba(0, 0, 0, 0.8)"
-                ]
+                (onInput SelectLanguage :: viewFormSelectStyle)
                 [ option
-                    [ value ""
-                    , hidden True
-                    ]
+                    [ value "", hidden True ]
                     [ text "Select Language" ]
                 , option [ value "english" ] [ text "ENGLISH" ]
                 , option [ value "korean" ] [ text "KOREAN" ]
@@ -171,34 +147,20 @@ viewRegisterForm model =
             , Form.viewFormErrors Language model.formErrors
             ]
         , button
-            [ style "width" "120px"
-            , style "height" "40px"
-            , style "margin-top" "20px"
-            , style "border-radius" "10px"
-            , style "border" "solid 1px rgba(0, 0, 0, 0.2)"
-            , style "background-color" "#36bcff"
-            , style "color" "#ffffff"
-            ]
+            viewFormButtonStyle
             [ text "Register" ]
         ]
 
 
-registerFormElement : FormField -> List FormError -> String -> (String -> Msg) -> Html Msg
-registerFormElement formField errors inputLabel msg =
-    label [ style "margin-top" "50px" ]
+registerFormField : FormField -> List FormError -> String -> (String -> Msg) -> Html Msg
+registerFormField formField errors inputLabel msg =
+    label viewFormFieldStyle
         [ strong [] [ text inputLabel ]
         , br [] []
         , input
-            [ type_ "text"
-            , onInput msg
-            , style "width" "250px"
-            , style "height" "25px"
-            , style "border-radius" "5px"
-            , style "border" "solid 1px rgba(0, 0, 0, 0.8)"
-            , style "font-size" "20px"
-            , style "text-align" "center"
-            , style "margin-top" "10px"
-            ]
+            ([ type_ "text", onInput msg ]
+                ++ viewFormFieldInputStyle
+            )
             []
         , Form.viewFormErrors formField errors
         ]
