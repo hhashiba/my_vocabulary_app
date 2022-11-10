@@ -1,14 +1,11 @@
 module Page.ListPage exposing (Model, Msg, init, update, view)
 
-import Element exposing (Element, alignRight, centerX, centerY, column, el, fill, height, layout, link, mouseOver, padding, paddingEach, paddingXY, px, rgba255, row, spacing, table, text, width)
-import Element.Background as Background
-import Element.Border as Border
-import Element.Font as Font
+import Css
+import Element exposing (Element, alignRight, centerX, column, el, fill, layout, link, paddingXY, px, rgba255, row, table, text)
 import Element.Input as Input exposing (button, checkbox)
 import Error exposing (buildErrorMessage)
 import Html exposing (Html)
 import Http
-import Page.Top exposing (Msg)
 import RemoteData exposing (WebData)
 import Word exposing (Word, initialWord, stringFromId, wordsDecoder)
 
@@ -16,8 +13,8 @@ import Word exposing (Word, initialWord, stringFromId, wordsDecoder)
 type alias Model =
     { words : WebData (List Word)
     , deleteError : Maybe String
-    , invisibleMeans : Bool
     , invisibleWord : Bool
+    , invisibleMeans : Bool
     }
 
 
@@ -25,8 +22,8 @@ type Msg
     = WordsReceived (WebData (List Word))
     | DeleteWord Word
     | WordDeleted (Result Http.Error String)
-    | InvisibleMeans Bool
     | InvisibleWord Bool
+    | InvisibleMeans Bool
 
 
 init : String -> ( Model, Cmd Msg )
@@ -115,17 +112,7 @@ view model =
                 RemoteData.Success _ ->
                     row [ alignRight ]
                         [ button
-                            [ width fill
-                            , height fill
-                            , padding 18
-                            , Background.color (rgba255 255 250 150 1)
-                            , Border.rounded 10
-                            , Border.solid
-                            , Border.color (rgba255 0 0 0 0.2)
-                            , Border.width 1
-                            , mouseOver
-                                [ Background.color (rgba255 255 240 100 1) ]
-                            ]
+                            Css.listPageViewNewWordButtonStyle
                             { onPress = Nothing
                             , label =
                                 link []
@@ -138,24 +125,21 @@ view model =
                 _ ->
                     text ""
 
-        wordList =
+        content =
             case model.deleteError of
                 Just _ ->
                     viewDeleteError model.deleteError
 
                 Nothing ->
-                    column [ height fill, width fill, paddingXY 0 50, Font.semiBold ]
+                    column Css.listPageViewBodyStyle
                         [ column
-                            [ centerX
-                            , width (px 1000)
-                            , spacing 20
-                            ]
+                            Css.listPageViewContentsStyle
                             [ newWordButton
                             , viewWordList model
                             ]
                         ]
     in
-    layout [] <| wordList
+    layout [] <| content
 
 
 
@@ -170,13 +154,7 @@ viewWordList model =
 
         RemoteData.Loading ->
             row
-                [ centerX
-                , centerY
-                , Font.italic
-                , Font.bold
-                , Font.size 30
-                , Font.letterSpacing 3
-                ]
+                Css.listPageViewWordLoadingStyle
                 [ text "Loading.." ]
 
         RemoteData.Success words ->
@@ -187,124 +165,30 @@ viewWordList model =
                 errorHeading =
                     "Couldn't fetch posts at this time."
             in
-            column
-                [ spacing 30
-                , Font.family
-                    [ Font.typeface "Hiragino Kaku Gothic ProN"
-                    , Font.sansSerif
-                    ]
-                , centerX
-                ]
-                [ el
-                    [ Font.bold
-                    , Font.size 24
-                    ]
-                    (text errorHeading)
-                , el
-                    [ Font.size 16
-                    , Font.regular
-                    , centerX
-                    ]
-                    (text ("Error : " ++ buildErrorMessage httpError))
-                ]
+            viewWordListError errorHeading (buildErrorMessage httpError)
 
 
 viewTable : List Word -> Bool -> Bool -> Element Msg
 viewTable words invisibleMeans invisibleWord =
     column
-        [ height fill
-        , width (px 1000)
-        , centerX
-        , centerY
-        , Background.color (rgba255 200 200 200 0.8)
-        , paddingEach { top = 20, right = 60, bottom = 70, left = 60 }
-        , Border.rounded 10
-        ]
-        [ table [ centerX, width fill, spacing 10 ]
+        Css.listPageViewTableColumnStyle
+        [ table Css.listPageViewTableStyle
             { data = words
             , columns =
-                [ { header =
-                        row [ paddingXY 30 40, spacing 10 ]
-                            [ column [ centerX ]
-                                [ text "Word" ]
-                            , column [ centerX ]
-                                [ checkbox []
-                                    { onChange = InvisibleWord
-                                    , icon = Input.defaultCheckbox
-                                    , checked = invisibleWord
-                                    , label = Input.labelRight [] <| text "invisible"
-                                    }
-                                ]
-                            ]
+                [ { header = viewTableHeader "Word" invisibleWord InvisibleWord
                   , width = px 200
                   , view =
-                        let
-                            fontColor =
-                                if invisibleWord then
-                                    Font.color (rgba255 255 255 255 1)
-
-                                else
-                                    Font.color (rgba255 0 0 0 1)
-
-                            hoverColor =
-                                if invisibleWord then
-                                    mouseOver [ Font.color (rgba255 0 0 0 1) ]
-
-                                else
-                                    mouseOver [ Font.color (rgba255 0 0 0 1) ]
-                        in
                         \word ->
                             row
-                                [ padding 10
-                                , centerY
-                                , centerX
-                                , Background.color (rgba255 255 255 255 1)
-                                , Border.rounded 5
-                                , fontColor
-                                , hoverColor
-                                ]
+                                (Css.listPageViewTableRowStyle invisibleWord)
                                 [ text word.name ]
                   }
-                , { header =
-                        row [ paddingXY 30 40, spacing 10 ]
-                            [ column [ centerX ]
-                                [ text "Means" ]
-                            , column [ centerX ]
-                                [ checkbox []
-                                    { onChange = InvisibleMeans
-                                    , icon = Input.defaultCheckbox
-                                    , checked = invisibleMeans
-                                    , label = Input.labelRight [] <| text "invisible"
-                                    }
-                                ]
-                            ]
+                , { header = viewTableHeader "Means" invisibleMeans InvisibleMeans
                   , width = px 300
                   , view =
-                        let
-                            fontColor =
-                                if invisibleMeans then
-                                    Font.color (rgba255 255 255 255 1)
-
-                                else
-                                    Font.color (rgba255 0 0 0 1)
-
-                            hoverColor =
-                                if invisibleMeans then
-                                    mouseOver [ Font.color (rgba255 0 0 0 1) ]
-
-                                else
-                                    mouseOver [ Font.color (rgba255 0 0 0 1) ]
-                        in
                         \word ->
                             row
-                                [ height (px 40)
-                                , paddingXY 10 0
-                                , centerY
-                                , Background.color (rgba255 255 255 255 1)
-                                , Border.rounded 5
-                                , fontColor
-                                , hoverColor
-                                ]
+                                (Css.listPageViewTableRowStyle invisibleMeans)
                                 [ text word.means ]
                   }
                 , { header =
@@ -318,18 +202,10 @@ viewTable words invisibleMeans invisibleWord =
                         \word ->
                             row []
                                 [ button
-                                    [ width (px 40)
-                                    , height (px 40)
-                                    , centerX
-                                    , centerY
-                                    , Background.color (rgba255 85 250 91 1)
-                                    , Border.rounded 50
-                                    , Border.solid
-                                    , Border.color (rgba255 0 0 0 0.2)
-                                    , Border.width 1
-                                    , mouseOver
-                                        [ Background.color (rgba255 70 200 80 1) ]
-                                    ]
+                                    (Css.listPageViewTableRowButtonStyle
+                                        (rgba255 85 250 91 1)
+                                        (rgba255 70 200 80 1)
+                                    )
                                     { onPress = Nothing
                                     , label =
                                         link [ centerX ]
@@ -350,18 +226,10 @@ viewTable words invisibleMeans invisibleWord =
                         \word ->
                             row []
                                 [ button
-                                    [ width (px 40)
-                                    , height (px 40)
-                                    , centerX
-                                    , centerY
-                                    , Background.color (rgba255 255 90 80 1)
-                                    , Border.rounded 50
-                                    , Border.solid
-                                    , Border.color (rgba255 0 0 0 0.2)
-                                    , Border.width 1
-                                    , mouseOver
-                                        [ Background.color (rgba255 255 40 40 1) ]
-                                    ]
+                                    (Css.listPageViewTableRowButtonStyle
+                                        (rgba255 255 90 80 1)
+                                        (rgba255 255 40 40 1)
+                                    )
                                     { onPress = Just (DeleteWord word)
                                     , label = row [ centerX ] [ text "D" ]
                                     }
@@ -369,6 +237,22 @@ viewTable words invisibleMeans invisibleWord =
                   }
                 ]
             }
+        ]
+
+
+viewTableHeader : String -> Bool -> (Bool -> Msg) -> Element Msg
+viewTableHeader labelText check msg =
+    row Css.listPageViewTableHeaderStyle
+        [ column [ centerX ]
+            [ text labelText ]
+        , column [ centerX ]
+            [ checkbox []
+                { onChange = msg
+                , icon = Input.defaultCheckbox
+                , checked = check
+                , label = Input.labelRight [] <| text "invisible"
+                }
+            ]
         ]
 
 
@@ -380,27 +264,20 @@ viewDeleteError deleteError =
     in
     case deleteError of
         Just error ->
-            column
-                [ spacing 30
-                , centerX
-                , Font.family
-                    [ Font.typeface "Hiragino Kaku Gothic ProN"
-                    , Font.sansSerif
-                    ]
-                , paddingXY 0 50
-                ]
-                [ el
-                    [ Font.bold
-                    , Font.size 24
-                    ]
-                    (text errorHeading)
-                , el
-                    [ Font.size 16
-                    , Font.regular
-                    , centerX
-                    ]
-                    (text ("Error : " ++ error))
-                ]
+            viewWordListError errorHeading error
 
         Nothing ->
             text ""
+
+
+viewWordListError : String -> String -> Element Msg
+viewWordListError errorHeading errorMsg =
+    column
+        Css.listPageViewWordListErrorStyle
+        [ el
+            Css.listPageViewWordListErrorHeadingStyle
+            (text errorHeading)
+        , el
+            Css.listPageViewWordListErrorMsgStyle
+            (text ("Error : " ++ errorMsg))
+        ]

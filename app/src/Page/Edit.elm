@@ -1,11 +1,11 @@
 module Page.Edit exposing (Model, Msg, init, update, view)
 
 import Browser.Navigation as Nav
-import Css exposing (formViewStyle, saveErrorStyle, viewFormButtonStyle, viewFormFieldInputStyle, viewFormFieldStyle, viewFormSelectStyle, viewFormStyle, viewH1Style)
+import Css
 import Error exposing (buildErrorMessage, viewFetchError)
 import Form exposing (FormError, FormField(..))
 import Html exposing (Html, br, button, div, h1, input, label, option, p, select, strong, text)
-import Html.Attributes exposing (hidden, style, type_, value)
+import Html.Attributes exposing (hidden, type_, value)
 import Html.Events exposing (onInput, onSubmit)
 import Http
 import RemoteData exposing (WebData)
@@ -163,14 +163,14 @@ view model =
             case model.saveError of
                 Just error ->
                     div
-                        saveErrorStyle
+                        Css.commonSaveErrorStyle
                         [ Form.viewSaveError error ]
 
                 Nothing ->
                     div
-                        formViewStyle
+                        Css.commonFormViewStyle
                         [ h1
-                            viewH1Style
+                            Css.commonViewFormH1Style
                             [ text label ]
                         , viewWord model
                         ]
@@ -186,12 +186,7 @@ viewWord model =
 
         RemoteData.Loading ->
             p
-                [ style "text-align" "center"
-                , style "font-style" "italic"
-                , style "font-weight" "900"
-                , style "font-size" "30px"
-                , style "letter-spacing" "3px"
-                ]
+                Css.editViewWordLoadingStyle
                 [ text "Loading.." ]
 
         RemoteData.Success word ->
@@ -204,14 +199,14 @@ viewWord model =
 viewEditForm : Model -> Word -> Html Msg
 viewEditForm model word =
     Html.form
-        (onSubmit (SaveEdit word) :: viewFormStyle)
-        [ editFormElement Name model.formErrors "Word" word.name UpdateName
-        , editFormElement Means model.formErrors "Means" word.means UpdateMeans
+        (onSubmit (SaveEdit word) :: Css.commonViewFormStyle)
+        [ editFormField Name model.formErrors "Word" word.name UpdateName
+        , editFormField Means model.formErrors "Means" word.means UpdateMeans
         , div []
             [ strong [] [ text "Language" ]
             , br [] []
             , select
-                (onInput UpdateLanguage :: viewFormSelectStyle)
+                (onInput UpdateLanguage :: Css.commonViewFormSelectStyle)
                 [ option [ hidden True, value word.language ] [ text (String.toUpper word.language) ]
                 , option [ value "english" ] [ text "ENGLISH" ]
                 , option [ value "korean" ] [ text "KOREAN" ]
@@ -219,14 +214,14 @@ viewEditForm model word =
             , Form.viewFormErrors Language model.formErrors
             ]
         , button
-            viewFormButtonStyle
+            Css.commonViewFormButtonStyle
             [ text "Save" ]
         ]
 
 
-editFormElement : FormField -> List FormError -> String -> String -> (String -> Msg) -> Html Msg
-editFormElement formField errors inputLabel oldValue msg =
-    label viewFormFieldStyle
+editFormField : FormField -> List FormError -> String -> String -> (String -> Msg) -> Html Msg
+editFormField formField errors inputLabel oldValue msg =
+    label Css.commonViewFormFieldStyle
         [ strong [] [ text inputLabel ]
         , br [] []
         , input
@@ -234,7 +229,7 @@ editFormElement formField errors inputLabel oldValue msg =
              , value oldValue
              , onInput msg
              ]
-                ++ viewFormFieldInputStyle
+                ++ Css.commonViewFormFieldInputStyle
             )
             []
         , Form.viewFormErrors formField errors

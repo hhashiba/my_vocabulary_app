@@ -1,7 +1,7 @@
 module Page.Register exposing (Model, Msg, init, update, view)
 
 import Browser.Navigation as Nav
-import Css exposing (formViewStyle, saveErrorStyle, viewFormButtonStyle, viewFormFieldInputStyle, viewFormFieldStyle, viewFormSelectStyle, viewFormStyle, viewH1Style)
+import Css
 import Error exposing (buildErrorMessage)
 import Form exposing (FormError, FormField(..))
 import Html exposing (Html, br, button, div, h1, input, label, option, select, strong, text)
@@ -112,14 +112,14 @@ view model =
             case model.registerError of
                 Just error ->
                     div
-                        saveErrorStyle
+                        Css.commonSaveErrorStyle
                         [ Form.viewSaveError error ]
 
                 Nothing ->
                     div
-                        formViewStyle
+                        Css.commonFormViewStyle
                         [ h1
-                            viewH1Style
+                            Css.commonViewFormH1Style
                             [ text "New Word" ]
                         , viewRegisterForm model
                         ]
@@ -130,14 +130,14 @@ view model =
 viewRegisterForm : Model -> Html Msg
 viewRegisterForm model =
     Html.form
-        (onSubmit RegisterWord :: viewFormStyle)
+        (onSubmit RegisterWord :: Css.commonViewFormStyle)
         [ registerFormField Name model.formErrors "Word" StoreName
         , registerFormField Means model.formErrors "Means" StoreMeans
         , div []
             [ strong [] [ text "Language" ]
             , br [] []
             , select
-                (onInput SelectLanguage :: viewFormSelectStyle)
+                (onInput SelectLanguage :: Css.commonViewFormSelectStyle)
                 [ option
                     [ value "", hidden True ]
                     [ text "Select Language" ]
@@ -147,19 +147,19 @@ viewRegisterForm model =
             , Form.viewFormErrors Language model.formErrors
             ]
         , button
-            viewFormButtonStyle
+            Css.commonViewFormButtonStyle
             [ text "Register" ]
         ]
 
 
 registerFormField : FormField -> List FormError -> String -> (String -> Msg) -> Html Msg
 registerFormField formField errors inputLabel msg =
-    label viewFormFieldStyle
+    label Css.commonViewFormFieldStyle
         [ strong [] [ text inputLabel ]
         , br [] []
         , input
             ([ type_ "text", onInput msg ]
-                ++ viewFormFieldInputStyle
+                ++ Css.commonViewFormFieldInputStyle
             )
             []
         , Form.viewFormErrors formField errors

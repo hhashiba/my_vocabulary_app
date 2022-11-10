@@ -2,8 +2,9 @@ module Main exposing (main)
 
 import Browser exposing (Document, UrlRequest(..))
 import Browser.Navigation as Nav
+import Css
 import Html exposing (Html, a, div, h1, text)
-import Html.Attributes exposing (href, style)
+import Html.Attributes exposing (href)
 import Page.Edit as Edit
 import Page.ListPage as ListPage
 import Page.Register as Register
@@ -165,22 +166,11 @@ view model =
 viewHeader : Html Msg
 viewHeader =
     div
-        [ style "width" "100%"
-        , style "height" "100px"
-        , style "text-align" "center"
-        , style "border-bottom" "1px solid #000000"
-        ]
+        Css.mainViewHeaderStyle
         [ h1
-            [ style "margin-top" "30px"
-            , style "margin-bottom" "20px"
-            ]
+            Css.mainViewHeaderH1Style
             [ a
-                [ href "/"
-                , style "text-decoration" "none"
-                , style "color" "#000000"
-                , style "letter-spacing" "3px"
-                , style "font-size" "40px"
-                ]
+                (href "/" :: Css.mainViewHeaderAStyle)
                 [ text "My Vocabulary" ]
             ]
         ]
