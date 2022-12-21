@@ -1,0 +1,12 @@
+/Users/hiro/Desktop/demo/api/target/debug/deps/sqlformat-02716f4d5a057619.rmeta: /Users/hiro/.cargo/registry/src/github.com-1ecc6299db9ec823/sqlformat-0.2.0/src/lib.rs /Users/hiro/.cargo/registry/src/github.com-1ecc6299db9ec823/sqlformat-0.2.0/src/formatter.rs /Users/hiro/.cargo/registry/src/github.com-1ecc6299db9ec823/sqlformat-0.2.0/src/indentation.rs /Users/hiro/.cargo/registry/src/github.com-1ecc6299db9ec823/sqlformat-0.2.0/src/inline_block.rs /Users/hiro/.cargo/registry/src/github.com-1ecc6299db9ec823/sqlformat-0.2.0/src/params.rs /Users/hiro/.cargo/registry/src/github.com-1ecc6299db9ec823/sqlformat-0.2.0/src/tokenizer.rs
+
+/Users/hiro/Desktop/demo/api/target/debug/deps/libsqlformat-02716f4d5a057619.rlib: /Users/hiro/.cargo/registry/src/github.com-1ecc6299db9ec823/sqlformat-0.2.0/src/lib.rs /Users/hiro/.cargo/registry/src/github.com-1ecc6299db9ec823/sqlformat-0.2.0/src/formatter.rs /Users/hiro/.cargo/registry/src/github.com-1ecc6299db9ec823/sqlformat-0.2.0/src/indentation.rs /Users/hiro/.cargo/registry/src/github.com-1ecc6299db9ec823/sqlformat-0.2.0/src/inline_block.rs /Users/hiro/.cargo/registry/src/github.com-1ecc6299db9ec823/sqlformat-0.2.0/src/params.rs /Users/hiro/.cargo/registry/src/github.com-1ecc6299db9ec823/sqlformat-0.2.0/src/tokenizer.rs
+
+/Users/hiro/Desktop/demo/api/target/debug/deps/sqlformat-02716f4d5a057619.d: /Users/hiro/.cargo/registry/src/github.com-1ecc6299db9ec823/sqlformat-0.2.0/src/lib.rs /Users/hiro/.cargo/registry/src/github.com-1ecc6299db9ec823/sqlformat-0.2.0/src/formatter.rs /Users/hiro/.cargo/registry/src/github.com-1ecc6299db9ec823/sqlformat-0.2.0/src/indentation.rs /Users/hiro/.cargo/registry/src/github.com-1ecc6299db9ec823/sqlformat-0.2.0/src/inline_block.rs /Users/hiro/.cargo/registry/src/github.com-1ecc6299db9ec823/sqlformat-0.2.0/src/params.rs /Users/hiro/.cargo/registry/src/github.com-1ecc6299db9ec823/sqlformat-0.2.0/src/tokenizer.rs
+
+/Users/hiro/.cargo/registry/src/github.com-1ecc6299db9ec823/sqlformat-0.2.0/src/lib.rs:
+/Users/hiro/.cargo/registry/src/github.com-1ecc6299db9ec823/sqlformat-0.2.0/src/formatter.rs:
+/Users/hiro/.cargo/registry/src/github.com-1ecc6299db9ec823/sqlformat-0.2.0/src/indentation.rs:
+/Users/hiro/.cargo/registry/src/github.com-1ecc6299db9ec823/sqlformat-0.2.0/src/inline_block.rs:
+/Users/hiro/.cargo/registry/src/github.com-1ecc6299db9ec823/sqlformat-0.2.0/src/params.rs:
+/Users/hiro/.cargo/registry/src/github.com-1ecc6299db9ec823/sqlformat-0.2.0/src/tokenizer.rs:

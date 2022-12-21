@@ -1,0 +1,15 @@
+/Users/hiro/Desktop/my_vocabulary_app/api/target/debug/deps/anyhow-efde1226f15a1e5d.rmeta: /Users/hiro/.cargo/registry/src/github.com-1ecc6299db9ec823/anyhow-1.0.66/src/lib.rs /Users/hiro/.cargo/registry/src/github.com-1ecc6299db9ec823/anyhow-1.0.66/src/backtrace.rs /Users/hiro/.cargo/registry/src/github.com-1ecc6299db9ec823/anyhow-1.0.66/src/chain.rs /Users/hiro/.cargo/registry/src/github.com-1ecc6299db9ec823/anyhow-1.0.66/src/context.rs /Users/hiro/.cargo/registry/src/github.com-1ecc6299db9ec823/anyhow-1.0.66/src/ensure.rs /Users/hiro/.cargo/registry/src/github.com-1ecc6299db9ec823/anyhow-1.0.66/src/error.rs /Users/hiro/.cargo/registry/src/github.com-1ecc6299db9ec823/anyhow-1.0.66/src/fmt.rs /Users/hiro/.cargo/registry/src/github.com-1ecc6299db9ec823/anyhow-1.0.66/src/kind.rs /Users/hiro/.cargo/registry/src/github.com-1ecc6299db9ec823/anyhow-1.0.66/src/macros.rs /Users/hiro/.cargo/registry/src/github.com-1ecc6299db9ec823/anyhow-1.0.66/src/ptr.rs /Users/hiro/.cargo/registry/src/github.com-1ecc6299db9ec823/anyhow-1.0.66/src/wrapper.rs
+
+/Users/hiro/Desktop/my_vocabulary_app/api/target/debug/deps/anyhow-efde1226f15a1e5d.d: /Users/hiro/.cargo/registry/src/github.com-1ecc6299db9ec823/anyhow-1.0.66/src/lib.rs /Users/hiro/.cargo/registry/src/github.com-1ecc6299db9ec823/anyhow-1.0.66/src/backtrace.rs /Users/hiro/.cargo/registry/src/github.com-1ecc6299db9ec823/anyhow-1.0.66/src/chain.rs /Users/hiro/.cargo/registry/src/github.com-1ecc6299db9ec823/anyhow-1.0.66/src/context.rs /Users/hiro/.cargo/registry/src/github.com-1ecc6299db9ec823/anyhow-1.0.66/src/ensure.rs /Users/hiro/.cargo/registry/src/github.com-1ecc6299db9ec823/anyhow-1.0.66/src/error.rs /Users/hiro/.cargo/registry/src/github.com-1ecc6299db9ec823/anyhow-1.0.66/src/fmt.rs /Users/hiro/.cargo/registry/src/github.com-1ecc6299db9ec823/anyhow-1.0.66/src/kind.rs /Users/hiro/.cargo/registry/src/github.com-1ecc6299db9ec823/anyhow-1.0.66/src/macros.rs /Users/hiro/.cargo/registry/src/github.com-1ecc6299db9ec823/anyhow-1.0.66/src/ptr.rs /Users/hiro/.cargo/registry/src/github.com-1ecc6299db9ec823/anyhow-1.0.66/src/wrapper.rs
+
+/Users/hiro/.cargo/registry/src/github.com-1ecc6299db9ec823/anyhow-1.0.66/src/lib.rs:
+/Users/hiro/.cargo/registry/src/github.com-1ecc6299db9ec823/anyhow-1.0.66/src/backtrace.rs:
+/Users/hiro/.cargo/registry/src/github.com-1ecc6299db9ec823/anyhow-1.0.66/src/chain.rs:
+/Users/hiro/.cargo/registry/src/github.com-1ecc6299db9ec823/anyhow-1.0.66/src/context.rs:
+/Users/hiro/.cargo/registry/src/github.com-1ecc6299db9ec823/anyhow-1.0.66/src/ensure.rs:
+/Users/hiro/.cargo/registry/src/github.com-1ecc6299db9ec823/anyhow-1.0.66/src/error.rs:
+/Users/hiro/.cargo/registry/src/github.com-1ecc6299db9ec823/anyhow-1.0.66/src/fmt.rs:
+/Users/hiro/.cargo/registry/src/github.com-1ecc6299db9ec823/anyhow-1.0.66/src/kind.rs:
+/Users/hiro/.cargo/registry/src/github.com-1ecc6299db9ec823/anyhow-1.0.66/src/macros.rs:
+/Users/hiro/.cargo/registry/src/github.com-1ecc6299db9ec823/anyhow-1.0.66/src/ptr.rs:
+/Users/hiro/.cargo/registry/src/github.com-1ecc6299db9ec823/anyhow-1.0.66/src/wrapper.rs:

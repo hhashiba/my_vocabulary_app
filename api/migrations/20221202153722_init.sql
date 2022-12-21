@@ -1,0 +1,15 @@
+CREATE TABlE languages
+(
+	id		SERIAL NOT NULL PRIMARY KEY,
+	name	TEXT NOT NULL
+);
+
+CREATE TABLE words
+(
+	id		SERIAL NOT NULL PRIMARY KEY,
+	name	TEXT NOT NULL,
+	means	TEXT NOT NULL,
+	lang_id	INT NOT NULL,
+	FOREIGN KEY (lang_id) REFERENCES languages(id)
+		ON DELETE CASCADE
+);
